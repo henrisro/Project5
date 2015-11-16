@@ -1,0 +1,300 @@
+\documentclass[a4paper, 11pt, notitlepage,english]{article}
+
+%
+% Importering av pakker
+%
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{algorithm,algorithmic}
+\usepackage[T1]{fontenc, url}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb}
+\usepackage{amsbsy, amsfonts}
+\usepackage{graphicx, color}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage[text={6.2in,9.2in},centering]{geometry}
+\usepackage{subfigure}
+\bibliographystyle{plain}
+ 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.9,0.9,0.9}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+ 
+\usepackage{parskip}
+% \usepackage{tabularx}
+
+%
+% Parametere for inkludering av kode fra fil
+%
+%\lstset{language=python}
+%\lstset{basicstyle=\ttfamily\small}
+%\lstset{frame=single}
+%\lstset{keywordstyle=\color{red}\bfseries}
+%\lstset{commentstyle=\itshape\color{blue}}
+%\lstset{showspaces=false}
+%\lstset{showstringspaces=false}
+%\lstset{showtabs=false}
+%\lstset{breaklines}
+
+\lstset{ %
+    language=C++,
+    backgroundcolor=\color{gray},
+    basicstyle=\footnotesize,
+    frame=bt,
+    framexleftmargin=5pt,
+    keywordstyle=\bf \color{dkgreen},
+    commentstyle=\color{mauve}\slshape,
+    breaklines=true
+}
+
+%
+% Definering av egne kommandoer og miljøer
+%
+\newcommand{\dd}[1]{\ \text{d}#1}
+\newcommand{\f}[2]{\frac{#1}{#2}} 
+\newcommand{\beq}{\begin{equation*}}
+\newcommand{\eeq}{\end{equation*}}
+\newcommand{\bo}[1]{\boldsymbol{#1}}
+\newcommand{\BAR}{%
+  \hspace{-\arraycolsep}%
+  \strut\vrule % the `\vrule` is as high and deep as a strut
+  \hspace{-\arraycolsep}%
+}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+%
+% Navn og tittel
+%
+\author{Candidate numbers:}
+\title{FYS4150 - Computational Physics \\
+      Project 5: \\
+       Diffusion of neurotransmitters in the synaptic cleft}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+In this project we study diffusion of neurotransmitters in the brain across the synaptic cleft. In particular, we look at the solution to the diffusion equation for a particular choice of boundary conditions. Our choice of boundary conditions allows for an analytical solution that is found and later compared to the numerical results. The numerical solutions are found by use of three different integration schemes for partial differential equations: the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicolson scheme. Finally, we compare these deterministic schemes to an implementation based on Monte Carlo methods and random walks. We find that ...\texttt{blah, results, blah}... \\
+\end{abstract}
+
+\begin{itemize}
+\item Github repository link with all source files and benchmark calculations: \\
+ \textcolor{blue}{https://github.com/henrisro/Project5}.
+\item A list of all the code files can be found in the code listing in the end of this document.
+\end{itemize}
+
+\section{Introduction}
+
+Diffusion of signal molecules is the dominant way of transportation in the brain. In this project we are going to study the solutions to the diffusion equation with restriction to some special boundary conditions. The basic process is illustrated in figure \ref{fig:Synaptic_cleft}. In (1) the vesicles inside the axon approach the presynaptic membrane and merge with it in (2). The vesicle contains neurotransmitters and release them across the synaptic cleft (of with $d$) in (3). If we denote the concentration of neurotransmitters at distance $x$ and time $t$ from the presynaptic membrane by $u(x,t)$, the dynamics can be described with the diffusion equation:
+
+\begin{equation}
+\frac{\partial u(x,t)}{\partial t} = D \nabla^2 u(x,t),
+\label{eq:Diffusion_eq}
+\end{equation}
+
+where $\nabla^2 = \frac{\partial^2}{\partial x^2}$ in the one dimensional case. This equation will be the subject of investigations with restrictions to the interval $x\in [0,d]$ for $d=1$ and diffusion constant equal to unity $D=1$. We will apply the boundary conditions
+
+\begin{equation}
+u(0,t) = 1 \hspace{2mm} \forall t > 0 \hspace{10pt} \mathrm{and} \hspace{10pt} u(d,t) = 0 \hspace{2mm} \forall t > 0,
+\label{eq:Boundary_condition}
+\end{equation}
+
+corresponding to a constant release of neurotransmitters at the presynaptic membrane ($u(0,t)$) and a constant absorption of transmitters at the postsynaptic membrane (at $u(d,t)$) at all times. The initial conditions will be taken to be:
+
+\begin{equation}
+u(x,t) = \begin{cases} 1  & \mathrm{if} \hspace{2mm} x = 0 \\
+0  & \mathrm{if} \hspace{2mm} x \in(0,d] \end{cases} 
+\label{eq:Initial_conditions}
+\end{equation}
+
+This basically means that all the neurotransmitters are located at $x=0$ initially when the vesicles are opened. \\
+
+\begin{figure}[h!tb]
+ \centering
+ \includegraphics[width=0.9\textwidth]{Synaptic_cleft_project}
+ \caption{Left: Illustration of the release of vesicle from an axon. The neurotransmitters (two chemical structures are shown to the right) travel diffusively across the synaptic cleft and are absorbed in the postsynaptic membrane at a distance $d$ away from the release point. The figure is taken from the project description \cite{Komp3150}, but originates from Thompson: "The Brain", Worth Publ., 2000.}
+\label{fig:Synaptic_cleft}
+\end{figure}
+
+The solutions will be studied by implementation of three different deterministic schemes in addition to a Monte Carlo based method. We will look in some detail at the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicholson scheme for partial differential equations (PDEs). The methods are compared in terms of precision and stability. 
+
+\section{Theory}
+
+\subsection{Analytical solution}
+To solve the one dimensional diffusion equation, 
+
+\begin{equation}
+\frac{\partial u}{\partial t} = \frac{\partial^2 u}{\partial x^2},
+\label{eq:Basic_problem}
+\end{equation}
+
+with the boundary conditions in (\ref{eq:Boundary_condition}) and initial conditions in (\ref{eq:Initial_conditions}), we apply the standard \emph{separation of variables} ansatz:
+
+\begin{equation}
+ u(x,t) = X(x)T(t) + u_s(x)
+\label{eq:Separation of variables}
+\end{equation}
+
+We here separate out the steady-state solution $u_s(x) = 1-x$, which trivially satisfies equation (\ref{eq:Basic_problem}). When inserted into equation (\ref{eq:Basic_problem}) we arrive at:
+
+\begin{equation}
+\frac{1}{X} \frac{d^2 X}{dx} = \frac{1}{T}\frac{dT}{dt} = -k^2
+\label{eq:Separated_equation}
+\end{equation}
+
+The last equality (i.e. both sides equal to a constant) follows since the left hand side is independent of $t$ and the right hand side independent of $x$. Looking first at the $X(x)$ equation, we realize that it is simply the harmonic oscillator equation with solution $X(x) = a\cos(kx) + b\sin(kx)$. The boundary condition in equation (\ref{eq:Boundary_condition}) translates to (since we must have $X(0) = X(1) = 0$ after adding the steady-state solution) $a = 0$ and $\sin(k) = 0 \Rightarrow k_n = n\pi$ for $n \in \mathbb{N}$. We thus have:
+
+\begin{equation}
+X_n(x) = b_n \sin(n\pi)
+\label{eq:Separated_X_solution}
+\end{equation}
+
+The equation for $T(t)$ is a separable first order differential equation and have solutions:
+
+\begin{equation}
+T_n(x) = \exp(-(n\pi)^2t)
+\label{eq:Separated_T_solution}
+\end{equation}
+
+The general solution is then a sum of (possibly all) the modes $X_n(x)T_n(t)$:
+
+\begin{equation}
+u(x,t) = 1-x +\sum_{n=1}^{\infty} b_n \sin(n\pi x) e^{-(n\pi)^2t}
+\label{eq:General_solution}
+\end{equation}
+
+The final step is to determine the coefficients $b_n$ such that $u(x,0)$ fits the initial conditions in equation (\ref{eq:Initial_conditions}). This can be rewritten as 
+
+\begin{equation}
+\sum_{n=1}^{\infty} b_n \sin(n\pi x) = u_0(x) =  \begin{cases} 0 & \mathrm{if} \hspace{2mm} x = 0 \\
+x-1 & \mathrm{if} \hspace{2mm} x \in (0,1] \end{cases}
+\label{eq:Initial_cond_fit}
+\end{equation}
+
+This is just as the Fourier series of the odd extension of the function $u_0(x)$ on the interval $[0,1]$. The coefficients are determined by Fourier's trick (see for instance \cite{Boas}):
+
+\begin{equation}
+b_n = 2\int_0^1 dx \hspace{1mm} (x-1) \sin(n\pi x) = -\frac{2}{n\pi}
+\label{eq:Fourier_trick}
+\end{equation}
+
+We hence have arrived at the final closed form solution:
+
+\begin{equation}
+u(x,t) = 1-x - \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{\sin(n\pi x)}{n} e^{-(n\pi)^2t}
+\label{eq:Final_solution}
+\end{equation}
+
+\section{Method / Algorithm}
+\subsection{Forward Euler scheme}
+\subsection{Backward Euler scheme}
+\subsection{Crank-Nicolson scheme}
+
+\section{Results}
+
+\section{Discussion}
+%\label{sec:Discuss}
+
+\section{Conclusion}
+
+\section{Appendix}
+
+\bibliography{References_pro5}
+
+\section*{Code listing}
+
+
+ %\begin{equation}
+ %\delta a = \delta \gamma\cos{\gamma}
+%\label{eq:aksel_1_usikker}
+%\end{equation}
+ 
+ %\begin{table}[h!tb]
+%\begin{center}
+   %\begin{tabular}{ | p{2cm} | p{2cm} | p{3cm} |}
+    %\hline
+     %& $x_i$ [mm] & $\delta x_i$ [mm] \vspace{2 mm} \\ \hline
+     %$l_a$ & 708 & 0   \\ 
+     %$dl_s$ & 0 & 0.5  \\ 
+     %$\sqrt{n}\cdot dl_l$ & 0 & $\sqrt{3}\cdot0.5 =0.87$  \\ 
+     %$dl_m$ & 0 & $0.1\cdot\frac{708}{100} = 0.71$ \vspace{2 mm} \\ \hline
+     %&$\sum_i x_i$ & $\sqrt{\sum_i \delta x_i}$  \\ 
+     %& 708 & 1.12 \\ \hline
+    %\end{tabular}
+%\end{center}
+%\caption{Måling av $x$ med målestokk. Til gjeldende antall siffer: $x = (708 \pm 1)$ mm.}
+%\end{table}
+ 
+ %\begin{figure}[h!tb]
+ %\centering
+ %\mbox{\subfigure{\includegraphics[width=2.7in]{kjent_vinkel_skraaplan}}\quad
+ %\subfigure{\includegraphics[width=2.7in]{kjent_vinkel_skraaplan_linreg} }}
+ %\caption{Til venstre: Hastighet som funksjon av tid mens bilen trillet langs skråplanet. Til høyre: Lineær regresjon på partiet der hastigheten øker jevnt.}
+%\end{figure}
+
+%\begin{figure}[h!tb]
+ %\centering
+ %includegraphics[width=2.7in]{Raynold_Rayleigh}
+ %\caption{Plott av data fra tabell 2, dvs. Raynoldstallet plottet mot henholdsvis Rayleigh- og Stokes-koeffisientene for de ulike kombinasjonene av ballonger og vekter.}
+%\end{figure}
+
+%%% Eksempel på linjert matematikk med tall for hver linje %%%
+%\begin{align}
+%   n &=  \int_0^\infty n\left( \frac{1}{2\pi mkT} \right)^{3/2} e^{-\frac{p^2}{2mkT}}4\pi p^2 \hspace{1mm} dp \\
+%  &= 4\pi n\left( \frac{1}{2\pi mkT} \right)^{3/2}\int_0^\infty e^{-x} \underbrace{2mkTx}_{p^2} \underbrace{\frac{mkT}{\sqrt{2mkTx}}dx}_{dp} \\
+%  &= 4\pi n \left[ \frac{1}{2\pi mkT}\cdot (2mkT)^{1/3} \cdot (mkT)^{2/3} \right]^{3/2}\underbrace{\int_0^{\infty} x^{1/2}e^{-x} \hspace{1mm} dx}_{\frac{\sqrt{\pi}}{2}} \\
+%  &= 4\pi n \left[ \frac{1}{2^{2/3}\pi} \right]^{3/2}\frac{\sqrt{\pi}}{2} \\
+%  &= 2\pi^{3/2}n\cdot \frac{1}{2\pi^{3/2}} = n
+%\end{align}
+
+%%% Eksempel på listing av kode %%%
+%\lstset{language=python,caption={Program for å numerisk bekrefte at $PV=NkT$.}}
+%\begin{lstlisting}
+%# OBLIG 11; Ideal gas law
+%def find_P(T,N):
+%    u = 1.66054*10**(-27)          # [kg]
+%    m = u*1.0079                   # [kg], mass of hydrogen atom
+%    dt = 10**(-9)                  # [s]
+%    A = 6*B_wall**2                # [m^2]
+
+%    sigma = sqrt(k*T/m)
+%    v = zeros((N,3))
+%    r = zeros((N,3))
+
+%    F = 0
+%    for i in xrange(N):
+%        v[i] = array([rn.gauss(0,sigma),rn.gauss(0,sigma),rn.gauss(0,sigma)])
+%        r[i] = array([rn.uniform(0,B_wall),rn.uniform(0,B_wall),rn.uniform(0,B_wall)])
+%        p = m*v[i]
+%        for j in xrange(3):
+%           if (abs(v[i,j])*dt >= B_wall-r[i,j]):
+%              F += 2*abs(p[j])/dt
+%    P = F/A
+%    return P
+%\end{lstlisting}
+
+
+%%% Eksempel på tabelloppsett %%%
+%\begin{center}
+   %\begin{tabular}{ | p{2cm} | p{3cm} | p{3cm} |}
+    %\hline
+    %Event A: & $x_A=0$ & $t_A=0$ \vspace{2 mm} \\ \hline
+    %& $x_A^{'}=0$ & $t_A^{'}=0$ \vspace{2 mm}  \\ \hline
+    %Event B: & $x_B=L_0$ & $t_B=L_0$ \vspace{2 mm} \\ \hline
+    % & $x_B^{'}=L_0\gamma(1-v)$ & $t_B^{'}=L_0\gamma(1-v)$ \vspace{2 mm}  \\ \hline
+    %Event C: & $x_C=vL_0$ & $t_C=L_0$ \vspace{2 mm} \\ \hline
+     %& $x_C^{'}=0$ & $t_C^{'}=\frac{L_0}{\gamma}$ \vspace{2 mm}  \\ \hline
+    %\end{tabular}
+%\end{center}
+
+
+%%% Eksempel på inkludering av figur %%%
+%\begin{figure}[h!tb]
+ %\centering
+ %\includegraphics[width=\textwidth]{star4}
+%\end{figure}
+
+\end{document}
