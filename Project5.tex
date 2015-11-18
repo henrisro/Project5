@@ -229,6 +229,13 @@ u_{xx} &= u_t \Rightarrow \\
 \label{eq:Forward_Euler_scheme}
 \end{align}
 
+\begin{figure}[h!tb]
+ \centering
+ \includegraphics[width=0.4\textwidth]{Grid_FE-figure0}
+ \caption{Forward Euler computational grid scheme for the $(1+1)$-dimensional diffusion equation. $u_{i,j}$ is the discretized solution at position $x_i$ and time $t_j$.}
+ \label{fig:FE_grid}
+\end{figure}
+
 This scheme is explicit (recursive) in the sense that it gives a straight forward recipe of how to find the solution at the next time step given the solution at the previous one. It should be initialized with the initial condition, $u_{i,0} = u_0(x_i)$ as given in equation (\ref{eq:Initial_cond_fit}). In terms of a matrix equation we can write:
 
 \begin{align}
@@ -249,7 +256,7 @@ u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
 \label{eq:Forward_Euler_matrix}
 \end{align}
 
-with the initial condition (in our case) $\boldsymbol{U}_0 = (u_0(0), u_0(\Delta x), \dots, u_0(1))^T = (1,0,\dots,0)^T$.
+with the initial condition (in our case) $\boldsymbol{U}_0 = ( u_0(\Delta x), u_0(2\Delta x), \dots, u_0(1))^T = (1,0,\dots,0)^T$.
 
 \subsection{Backward Euler scheme}
 The Backward Euler scheme (just like for ordinary differential equations) exploits a time derivative approximation with a function evaluation backwards in time and the same approximation for $u_{xx}$ as in equation (\ref{eq:Forward_uxx}). We (re)state both approximations to have a clear argument:
@@ -275,6 +282,14 @@ u_{xx} &= u_t \Rightarrow \\
 \label{eq:Backward_Euler_scheme}
 \end{align}
 
+\begin{figure}[h!tb]
+ \centering
+ \includegraphics[width=0.4\textwidth]{Grid_BE-figure0}
+ \caption{Backward Euler computational grid scheme for the $(1+1)$-dimensional diffusion equation. $u_{i,j}$ is the discretized solution at position $x_i$ and time $t_j$.}
+ \label{fig:FE_grid}
+\end{figure}
+
+
 This recursion relation backwards in time does, as compared to the Forward Euler scheme, not give us the solution for the next time step in terms of the previous one. It instead takes the following form when written in matrix notation:
 
 \begin{align}
@@ -298,6 +313,58 @@ u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
 This asks for, at each time step $j$, nothing else than a set of linear equations to be solved. Phrased differently, a matrix inversion (meaning we must find $B^{-1}$ with $B$ tridiagonal as above) would give us the solution at each time step straight away: $\boldsymbol{U}_j = B^{-1} \boldsymbol{U}_{j-1}$. However, a matrix-vector multiplication at each time step is computationally consuming as it costs $\mathcal{O}(n^2)$ FLOPS and the matrix inversion even worse with its $\mathcal{O}(n^3)$ FLOPS. From Project 1, however, we know that solving such equations for a tridiagonal matrix can be done by an algorithm that takes only $\mathcal{O}(n)$ FLOPS; far superior when the dimension becomes large.
 
 \subsection{Crank-Nicolson scheme}
+The Crank-Nicolson scheme is, in a sense, an equally weighted compromise between the forward Euler scheme and the backward Euler scheme. To see this explicitly, let us rephrase and compare the two previous schemes:
+
+\begin{equation}
+ \frac{1}{\Delta t} (u_{i,j}-u_{i,j-1}) = \frac{1}{\Delta x^2} (u_{i+1,j-1}-2u_{i,j-1}+u_{i-1,j-1}) \hspace{10pt} \mathrm{(Forward \hspace{2mm} Euler)}
+\end{equation}
+
+\begin{equation}
+ \frac{1}{\Delta t} (u_{i,j}-u_{i,j-1}) = \frac{1}{\Delta x^2} (u_{i+1,j}-2u_{i,j}+u_{i-1,j}) \hspace{10pt} \mathrm{(Backward \hspace{2mm} Euler)}
+\end{equation}
+
+Adding the two equations gives the Crank-Nicolson scheme:
+
+\begin{align}
+\frac{2}{\Delta t} (u_{i,j}-u_{i,j-1}) &= \frac{1}{\Delta x^2} (u_{i+1,j}-2u_{i,j}+u_{i-1,j}+u_{i+1,j}-2u_{i,j}+u_{i-1,j} ) \Rightarrow \\
+ -\alpha u_{i+1,j} + 2(1+\alpha)u_{i,j} -\alpha u_{i-1,j} &= \alpha u_{i+1,j-1} + 2(1-\alpha) u_{i,j-1} + \alpha u_{i-1,j-1}
+\label{eq:Crank_Nicoloson_scheme}
+\end{align}
+
+\begin{figure}[h!tb]
+ \centering
+ \includegraphics[width=0.4\textwidth]{Grid_CN-figure0}
+ \caption{Crank-Nicolson computational grid scheme for the $(1+1)$-dimensional diffusion equation. $u_{i,j}$ is the discretized solution at position $x_i$ and time $t_j$.}
+ \label{fig:FE_grid}
+\end{figure}
+
+
+or in matrix notation:
+
+\begin{align}
+C \boldsymbol{U}_j &= D \boldsymbol{U}_{j-1} \\
+\begin{bmatrix}
+ 2+2\alpha & -\alpha & 0 & \cdots & 0 & 0 \\
+ -\alpha & 2+2\alpha & -\alpha & \cdots & 0 & 0 \\
+  & \vdots & & \ddots & & \vdots \\
+ 0 & 0 & 0 & \cdots & -\alpha & 2+2\alpha \\
+\end{bmatrix}
+\begin{bmatrix}
+u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
+\end{bmatrix}
+&= \\
+\begin{bmatrix}
+ 2-2\alpha & \alpha & 0 & \cdots & 0 & 0 \\
+ \alpha & 2-2\alpha & \alpha & \cdots & 0 & 0 \\
+  & \vdots & & \ddots & & \vdots \\
+ 0 & 0 & 0 & \cdots & \alpha & 2-2\alpha \\
+\end{bmatrix}
+&\begin{bmatrix}
+u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
+\end{bmatrix}
+\label{eq:Crank_Nicolson_matrix}
+\end{align}
+
 \subsection{Monte Carlo methods and random walks}
 
 \section{Results}
