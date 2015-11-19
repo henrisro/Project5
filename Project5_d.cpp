@@ -1,6 +1,6 @@
 /*
 **     Project5: 
-**     Implementation of the three algorithms
+**     Implementation of the three methods
 **     1) Forward Euler explicit scheme
 **     2) Backward Euler implicit scheme
 **     3) Crank-Nicolson implicit scheme
@@ -48,10 +48,10 @@ else{
 }
 
 // Apply the Forward Euler scheme to test:
-int n = 19; // meaning Delta_x = 1/10 and Delta_t <= 0.005 for stability:
-int t_steps = 100;
+int n = 59; // meaning Delta_x = 1/10 and Delta_t <= 0.005 for stability:
+int t_steps = 1000;
 // delta_t determined by the stability condition for the Forward Euler scheme:
-double delta_t = 0.50 /(double (n+1)*(n+1));
+double delta_t = 0.45 /(double (n+1)*(n+1));
 
 // We apply the three methods of interest below:
 // Apply Forward Euler method:
@@ -77,12 +77,11 @@ ofile.close();
 } // End of main function.
 
 
-// N+1 is the total number of elements in the vectors y and u.
+// N is the total number of elements in the vectors y and u.
 // This implementation is similar to that of Project 1.
 void tridiag(double *a, double *b, double *c, vec & y, vec & u, int N) 
 // A*u = y where A is tridiagonal (b on diagonal)
 {
-  //u = zeros(N+1);
   vec diag_temp(N+1);
   //diag_temp(1) = 0.0;
   double b_temp = b[1];

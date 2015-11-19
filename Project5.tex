@@ -15,6 +15,8 @@
 \usepackage{listings}
 \usepackage{multicol}
 \usepackage{booktabs}
+\usepackage{bbm}
+\usepackage{amsthm}
 \usepackage[text={6.2in,9.2in},centering]{geometry}
 \usepackage{subfigure}
 \bibliographystyle{plain}
@@ -64,6 +66,10 @@
   \hspace{-\arraycolsep}%
 }
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\id}{\mathbbm{1}}
+\newcommand{\idop}{\bbm 1}
+
+\newtheorem{theorem}{Theorem}
 
 %
 % Navn og tittel
@@ -190,6 +196,20 @@ We hence have arrived at the final closed form solution:
 \label{eq:Final_solution}
 \end{equation}
 
+\subsection{Stability of matrix iterations}
+Suppose we are given the iteration $\boldsymbol{V}_i = A \boldsymbol{V}_{i-1}$ for some matrix $A$ and vectors $\boldsymbol{V}_i$. This implies that the vector after $n$ iterations is given in terms of the initial one as: $\boldsymbol{V}_n = A^n \boldsymbol{V}_0$. By expanding $\boldsymbol{V}_0$ in the eigenvector basis of $A$, we can quickly understand the following theorem quite intuitively: \\
+
+\begin{theorem}
+The solution to the iteration $\boldsymbol{V}_i = A \boldsymbol{V}_{i-1}$ will converge to a definite value if $\rho(A) < 1$, where $\rho(A)$ is the spectral radius of $A$:
+
+\begin{equation}
+\rho(A) = \mathrm{max}\{\lvert \lambda_n \rvert : \mathrm{det}(A-\lambda_n\id)=0 \}
+\label{eq:Spectral_radius}
+\end{equation}
+\end{theorem}
+
+This is a central concept in Chaos theory when determining for example the stability of flows and maps\footnote{This is for instance covered in Predrag Cvitanović's book on chaos theory: http://chaosbook.org/.}.
+
 \section{Method / Algorithm}
 This section is devoted to the discussion of the three deterministic schemes for PDEs mentioned earlier. We derive the algorithms and investigate their stability properties expressed in terms of $\Delta x$ and $\Delta t$. First some general nomenclature. We discretize the interval $[0,1]$ with a step length determined by some integer $n$: 
 
@@ -205,6 +225,8 @@ such that $x \mapsto x_i = i\Delta x$ for $i \in \{0,1,\dots,n+1 \}$. A correspo
 \label{eq:Step_parameter}
 \end{equation}
 
+The following discussion and derivations follow \cite{Komp3150} closely.
+
 \subsection{Forward Euler scheme}
 In this scheme we use the two simplest possible approximations for the derivatives $u_{xx}$ and $u_t$:
 
@@ -213,14 +235,14 @@ u_{xx} \approx \frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x, t)}{\Delta x^2} \maps
 \label{eq:Forward_uxx}
 \end{equation}
 
-with truncation error of the order $\mathcal{O}(\Delta x^2)$ and
+and
 
 \begin{equation}
 u_{t} \approx \frac{u(x,t+\Delta t)-u(x, t)}{\Delta t} \mapsto \frac{1}{\Delta t} (u_{i,j+1}-u_{i,j})
 \label{eq:Forward_ut}
 \end{equation}
 
-with truncation error of the order $\mathcal{O}(\Delta t)$. This leads directly to an explicit scheme when equating the above expressions:
+This leads directly to an explicit scheme when equating the above expressions:
 
 \begin{align}
 u_{xx} &= u_t \Rightarrow \\
@@ -236,7 +258,7 @@ u_{xx} &= u_t \Rightarrow \\
  \label{fig:FE_grid}
 \end{figure}
 
-This scheme is explicit (recursive) in the sense that it gives a straight forward recipe of how to find the solution at the next time step given the solution at the previous one. It should be initialized with the initial condition, $u_{i,0} = u_0(x_i)$ as given in equation (\ref{eq:Initial_cond_fit}). In terms of a matrix equation we can write:
+This scheme is explicit in the sense that it gives a recipe of how to find the solution at the next time step given the solution at the previous one. It should be initialized with the initial condition, $u_{i,0} = u_0(x_i)$ as given in equation (\ref{eq:Initial_cond_fit}). In terms of a matrix equation we can write:
 
 \begin{align}
 \boldsymbol{U}_{j+1} &= A \boldsymbol{U}_j \\
@@ -256,7 +278,53 @@ u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
 \label{eq:Forward_Euler_matrix}
 \end{align}
 
-with the initial condition (in our case) $\boldsymbol{U}_0 = ( u_0(\Delta x), u_0(2\Delta x), \dots, u_0(1))^T = (1,0,\dots,0)^T$.
+with the initial condition (in our case) $\boldsymbol{U}_0 = ( u_0(\Delta x), u_0(2\Delta x), \dots, u_0(1))^T = (1,0,\dots,0)^T$. It is appropriate, also for later reference, to decompose the matrix as $A = \id - \alpha B$ where the elements of $B$ can be expressed in terms of Kronecker deltas: 
+
+\begin{equation}
+B_{i,j} = 2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}
+\label{eq:Matrix_B}
+\end{equation}
+
+The subscripts here refer to matrix indices and have nothing to do with time and space coordinates as earlier. \\
+
+\textbf{Truncation errors} \newline
+The discretized equations in (\ref{eq:Forward_uxx}) and (\ref{eq:Forward_ut}) are easily seen to come from the Taylor expansions (with step lengths $\Delta x$ and $\Delta t$ respectively) around $u(x,t)$ 
+
+\begin{align}
+u(x\pm\Delta x,t) &= u(x,t) \pm \frac{\partial u(x,t)}{\partial x}\Delta x + \frac{\partial^2 u(x,t)}{\partial x^2}\Delta x^2 + \mathcal{O}(\Delta x^3)
+\label{eq:Forward_Euler_expansions1} \\
+u(x,t\pm \Delta t) &= u(x,t) \pm \frac{\partial u(x,t)}{\partial t}\Delta t + \mathcal{O}(\Delta t^2)
+\label{eq:Forward_Euler_expansions2}
+\end{align}
+
+and spell out for us that the Forward Euler scheme gives rise to errors of orders $\mathcal{O}(\Delta t)$ and $\mathcal{O}(\Delta x^2)$ when inserted into (\ref{eq:Forward_uxx}) and (\ref{eq:Forward_ut}). \\
+
+\textbf{Stability condition} \newline
+To determine for what combinations of $\Delta t$ and $\Delta x$ the Forward Euler scheme is stable, we investigate the spectral radius of the matrix $B$ (the other part of $A = \id - \alpha B$ is proportional to $\id$ and gives rise to a simple unit contribution to the eigenvalues):
+
+\begin{align}
+(B\boldsymbol{v})_i &= \lambda_i v_i \\
+\sum_{j=1}^n [2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}]v_j &= \lambda_i v_i
+\label{eq:Forward_Euler_stability1}
+\end{align}
+
+We continue with expanding the vector components in a sine basis $v_i = \sin(i\theta)$ with $\theta = $ such that
+
+\begin{align}
+\sum_{j=1}^n [2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}]v_j &= \lambda_i v_i \\
+2 \sin(i\theta) - \sin\left((i+1)\theta\right) - \sin\left((i-1)\theta\right) &= \lambda_i \sin(i\theta) \\
+2(1-\cos(\theta)) &= \lambda_i
+\label{eq:Forward_Euler_stability2}
+\end{align}
+
+Hence in order to have $\rho(A) < 1$, we must have
+
+\begin{equation}
+\lvert 1-2\alpha(1-\cos(\theta)) \rvert < 1 \Rightarrow \alpha = \frac{\Delta t}{\Delta x^2} \leq \frac{1}{2}
+\label{eq:Forward_Euler_stability3}
+\end{equation}
+
+The extremal eigenvalue occurs when $\theta = \pi$, at which the final inequality follows.
 
 \subsection{Backward Euler scheme}
 The Backward Euler scheme (just like for ordinary differential equations) exploits a time derivative approximation with a function evaluation backwards in time and the same approximation for $u_{xx}$ as in equation (\ref{eq:Forward_uxx}). We (re)state both approximations to have a clear argument:
@@ -273,7 +341,7 @@ u_{t} \approx \frac{u(x,t)-u(x,t-\Delta t)}{\Delta t} \mapsto \frac{1}{\Delta t}
 \label{eq:Backward_ut}
 \end{equation}
 
-with truncation errors of the orders $\mathcal{O}(\Delta x^2)$ and $\mathcal{O}(\Delta t)$ respectively. Equating these leaves us with:
+Equating these leaves us with:
 
 \begin{align}
 u_{xx} &= u_t \Rightarrow \\
@@ -286,14 +354,13 @@ u_{xx} &= u_t \Rightarrow \\
  \centering
  \includegraphics[width=0.4\textwidth]{Grid_BE-figure0}
  \caption{Backward Euler computational grid scheme for the $(1+1)$-dimensional diffusion equation. $u_{i,j}$ is the discretized solution at position $x_i$ and time $t_j$.}
- \label{fig:FE_grid}
+ \label{fig:BE_grid}
 \end{figure}
-
 
 This recursion relation backwards in time does, as compared to the Forward Euler scheme, not give us the solution for the next time step in terms of the previous one. It instead takes the following form when written in matrix notation:
 
 \begin{align}
-B \boldsymbol{U}_j &= \boldsymbol{U}_{j-1} \\
+C \boldsymbol{U}_j &= \boldsymbol{U}_{j-1} \\
 \begin{bmatrix}
  1+2\alpha & -\alpha & 0 & \cdots & 0 & 0 \\
  -\alpha & 1+2\alpha & -\alpha & \cdots & 0 & 0 \\
@@ -310,7 +377,13 @@ u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
 \label{eq:Backwards_Euler_matrix}
 \end{align}
 
-This asks for, at each time step $j$, nothing else than a set of linear equations to be solved. Phrased differently, a matrix inversion (meaning we must find $B^{-1}$ with $B$ tridiagonal as above) would give us the solution at each time step straight away: $\boldsymbol{U}_j = B^{-1} \boldsymbol{U}_{j-1}$. However, a matrix-vector multiplication at each time step is computationally consuming as it costs $\mathcal{O}(n^2)$ FLOPS and the matrix inversion even worse with its $\mathcal{O}(n^3)$ FLOPS. From Project 1, however, we know that solving such equations for a tridiagonal matrix can be done by an algorithm that takes only $\mathcal{O}(n)$ FLOPS; far superior when the dimension becomes large.
+with $C = \id + \alpha B$ and $B$ is the same as in (\ref{eq:Matrix_B}). This asks for, at each time step $j$, nothing else than a set of linear equations to be solved. Phrased differently, a matrix inversion (meaning we must find $C^{-1}$ with $C$ tridiagonal as above) would give us the solution at each time step straight away: $\boldsymbol{U}_j = C^{-1} \boldsymbol{U}_{j-1}$. However, a matrix-vector multiplication at each time step is computationally consuming as it costs $\mathcal{O}(n^2)$ FLOPS and the matrix inversion even worse with its $\mathcal{O}(n^3)$ FLOPS. From Project 1, however, we know that solving such equations for a tridiagonal matrix can be done by an algorithm that takes only $\mathcal{O}(n)$ FLOPS; far superior when the dimension becomes large. \\
+
+\textbf{Truncation errors} \newline
+Equations in (\ref{eq:Backward_uxx}) and (\ref{eq:Backward_ut}), just as for the Forward Euler scheme, stem from the Taylor expansions (with step lengths $\Delta x$ and $\Delta t$ respectively) as in equation (\ref{eq:Forward_Euler_expansions1}) and (\ref{eq:Forward_Euler_expansions2}). It is straight forwardly seen that this scheme gives identical truncation errors – of orders $\mathcal{O}(\Delta t)$ and $\mathcal{O}(\Delta x^2)$ – just as in the explicit method. \\
+
+\textbf{Stability condition} \newline
+This time we need to consider the spectral radius of $C^{-1} = (\id + \alpha B)^{-1}$. However, the work done in the stability discussion of the Forward Euler method gives us the answer quickly. We know from the earlier discussion that the eigenvalues of $C$ are strictly positive and larger than unity: $\mu_i = 1 + 2\alpha(1-\cos(\theta)) > 1$. This implies that the eigenvalues of $C^{-1}$ are strictly less than $1$: $\mu_i^{-1} < 1$. Furthermore we have $\rho(C^{-1}) < 1$ for all combinations of $\Delta t$ and $\Delta x$; a rather weak stability condition (i.e. no restrictions on the step lengths).
 
 \subsection{Crank-Nicolson scheme}
 The Crank-Nicolson scheme is, in a sense, an equally weighted compromise between the forward Euler scheme and the backward Euler scheme. To see this explicitly, let us rephrase and compare the two previous schemes:
@@ -323,7 +396,7 @@ The Crank-Nicolson scheme is, in a sense, an equally weighted compromise between
  \frac{1}{\Delta t} (u_{i,j}-u_{i,j-1}) = \frac{1}{\Delta x^2} (u_{i+1,j}-2u_{i,j}+u_{i-1,j}) \hspace{10pt} \mathrm{(Backward \hspace{2mm} Euler)}
 \end{equation}
 
-Adding the two equations gives the Crank-Nicolson scheme:
+Adding the two equations gives the Crank-Nicolson scheme\footnote{A more general approach would be to assign different weights the two contributions in what is known as a $\theta$-rule \cite{Komp3150}.}:
 
 \begin{align}
 \frac{2}{\Delta t} (u_{i,j}-u_{i,j-1}) &= \frac{1}{\Delta x^2} (u_{i+1,j}-2u_{i,j}+u_{i-1,j}+u_{i+1,j}-2u_{i,j}+u_{i-1,j} ) \Rightarrow \\
@@ -335,14 +408,14 @@ Adding the two equations gives the Crank-Nicolson scheme:
  \centering
  \includegraphics[width=0.4\textwidth]{Grid_CN-figure0}
  \caption{Crank-Nicolson computational grid scheme for the $(1+1)$-dimensional diffusion equation. $u_{i,j}$ is the discretized solution at position $x_i$ and time $t_j$.}
- \label{fig:FE_grid}
+ \label{fig:CN_grid}
 \end{figure}
 
 
 or in matrix notation:
 
 \begin{align}
-C \boldsymbol{U}_j &= D \boldsymbol{U}_{j-1} \\
+(2\id + \alpha B) \boldsymbol{U}_j &= (2\id - \alpha B) \boldsymbol{U}_{j-1} \\
 \begin{bmatrix}
  2+2\alpha & -\alpha & 0 & \cdots & 0 & 0 \\
  -\alpha & 2+2\alpha & -\alpha & \cdots & 0 & 0 \\
@@ -364,6 +437,36 @@ u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
 \end{bmatrix}
 \label{eq:Crank_Nicolson_matrix}
 \end{align}
+
+Thus $\boldsymbol{U}_j = (2\id+\alpha B)^{-1}(2\id - \alpha B)\boldsymbol{U}_{j-1}$. This looks very similar to the Backward Euler scheme with the only difference that we must at each time step first calculate $\tilde{\boldsymbol{U}}_{j-1} = (2\id - \alpha B)\boldsymbol{U}_{j-1}$ before sending $(2\id + \alpha B)\boldsymbol{U}_j = \tilde{\boldsymbol{U}}_{j-1}$ to the tridiagonal matrix solver. \\
+
+\textbf{Truncation errors} \newline
+The Crank-Nicolson scheme was presented above as the sum of two equally weighted contributions to $u_t$ – at steps $j+1$ and $j$ (figure \ref{fig:CN_grid}). The formulas for $u_{xx}$ were not altered, so the truncation errors in $x$ are still of the same order $\mathcal{O}(\Delta x^2)$. To see what happens to the truncation in $t$, we can Taylor expand the involved quantities around $t' = t + \Delta t /2$ and only care about the errors in powers of $\Delta t$:
+
+\begin{align}
+u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
+&+ \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \pm \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
+\label{eq:Crank_Nicolson_expansions1} \\
+u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
+&- \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \mp \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
+\label{eq:Crank_Nicolson_expansion2} \\
+u(x,t+\Delta t) &= u(x,t') + \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
+\label{eq:Crank_Nicolson_expansion3} \\
+u(x,t) &= u(x,t') - \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
+\label{eq:Crank_Nicolson_expansion4}
+\end{align}
+
+Putting these expansions carefully into equation (\ref{eq:Crank_Nicoloson_scheme}) (with the discretized labellings such as $u(x+\Delta x,t) = u_{i+1,j}$ etc.) and collecting the surviving terms, one does in fact see that the leading order truncation error in time is $\mathcal{O}(\Delta t^2)$ – an improvement as compared to the Forward and Backward Euler schemes. \\
+
+\textbf{Stability condition} \newline
+We need to look at the spectral radius of $(2\id + \alpha B)^{-1}(2\id -\alpha B)$. We can also this time reuse some earlier derived results. Recall the eigenvalues of $B$: $\lambda_i = 2(1-\cos(\theta) ) \in (0,4]$. The spectral radius condition thus translates to the following in this case:
+
+\begin{equation}
+\rho\left( (2\id + \alpha B)^{-1}(2\id -\alpha B) \right) = \frac{\lvert 2-\alpha \lambda_i\rvert}{\lvert 2+\alpha \lambda_i \rvert} < 1
+\label{eq:Crank_Nicolson_spectralrad}
+\end{equation}
+
+This inequality is quite trivially seen to be satisfied since $\lambda_i > 0$. It is even more clearly seen by considering the two cases $\alpha\lambda_i < 2$ and $\alpha\lambda_i > 2$ separately. In total, we arrive at the same condition as for the Backward Euler scheme: all combinations of $\Delta t$ and $\Delta x$ results in a stable solution.
 
 \subsection{Monte Carlo methods and random walks}
 

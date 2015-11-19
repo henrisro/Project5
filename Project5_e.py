@@ -67,7 +67,7 @@ for i in range(len(ts_Forward)):
 	ax.plot(x2, u_anal, 'b-') #label='t = %.2f' % t_val)
 	ax.plot(x, us_Backward[i], 'ys')
 	ax.plot(x, us_CrankNic[i], 'g^')
-	ax.plot(x, us_Forward[i], 'k.')
+	ax.plot(x, us_Forward[i], 'r.')
 
 	u_anal = np.zeros(N_x_analytic)
 

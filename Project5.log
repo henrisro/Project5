@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.4.17)  18 NOV 2015 18:06
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.4.17)  19 NOV 2015 16:23
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -680,6 +680,25 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count126
 \@thisrulewidth=\dimen139
 )
+(/usr/local/texlive/2011/texmf-dist/tex/latex/bbm-macros/bbm.sty
+Package: bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
+(Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
+(Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2009/07/02 v2.20.1
+\thm@style=\toks26
+\thm@bodyfont=\toks27
+\thm@headfont=\toks28
+\thm@notefont=\toks29
+\thm@headpunct=\toks30
+\thm@preskip=\skip50
+\thm@postskip=\skip51
+\thm@headsep=\skip52
+\dth@everypar=\toks31
+)
 (/usr/local/texlive/2011/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
@@ -705,16 +724,16 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutheight=\dimen145
 \Gm@layouthoffset=\dimen146
 \Gm@layoutvoffset=\dimen147
-\Gm@dimlist=\toks26
+\Gm@dimlist=\toks32
 )
 (/usr/local/texlive/2011/texmf-dist/tex/latex/subfigure/subfigure.sty
 Package: subfigure 2002/03/15 v2.1.5 subfigure package
-\subfigtopskip=\skip50
-\subfigcapskip=\skip51
+\subfigtopskip=\skip53
+\subfigcapskip=\skip54
 \subfigcaptopadj=\dimen148
-\subfigbottomskip=\skip52
+\subfigbottomskip=\skip55
 \subfigcapmargin=\dimen149
-\subfiglabelskip=\skip53
+\subfiglabelskip=\skip56
 \c@subfigure=\count130
 \c@lofdepth=\count131
 \c@subtable=\count132
@@ -724,8 +743,8 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 * Local config file subfigure.cfg used *
 ****************************************
 (/usr/local/texlive/2011/texmf-dist/tex/latex/subfigure/subfigure.cfg)
-\subfig@top=\skip54
-\subfig@bottom=\skip55
+\subfig@top=\skip57
+\subfig@bottom=\skip58
 )
 (/usr/local/texlive/2011/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2001/04/09 non-zero parskip adjustments
@@ -739,52 +758,47 @@ File: lstlang1.sty 2004/09/05 1.3 listings language file
 (/usr/local/texlive/2011/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
 )
-(./Project5.aux
+\c@theorem=\count134
 
-LaTeX Warning: Label `fig:FE_grid' multiply defined.
-
-
-LaTeX Warning: Label `fig:FE_grid' multiply defined.
-
-)
+(./Project5.aux)
 \openout1 = `Project5.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 76.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 82.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 82.
  (/usr/local/texlive/2011/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 76.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 82.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 (/usr/local/texlive/2011/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count134
+\scratchcounter=\count135
 \scratchdimen=\dimen150
 \scratchbox=\box58
-\nofMPsegments=\count135
-\nofMParguments=\count136
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count137
+\nofMPsegments=\count136
+\nofMParguments=\count137
+\everyMPshowfont=\toks33
+\MPscratchCnt=\count138
 \MPscratchDim=\dimen151
-\MPnumerator=\count138
-\makeMPintoPDFobject=\count139
-\everyMPtoPDFconversion=\toks28
+\MPnumerator=\count139
+\makeMPintoPDFobject=\count140
+\everyMPtoPDFconversion=\toks34
 ) (/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/04/22 v0.16 Utilities of pdfTeX for LuaTeX (HO)
 
@@ -828,7 +842,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count140
+\c@lstlisting=\count141
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -866,62 +880,62 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 77.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 83.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 77.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 83.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 77.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 83.
 
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 77.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 83.
 
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 77.
+(Font)              <12> on input line 83.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 77.
+(Font)              <8> on input line 83.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 77.
-LaTeX Font Info:    Try loading font information for U+msa on input line 77.
+(Font)              <6> on input line 83.
+LaTeX Font Info:    Try loading font information for U+msa on input line 83.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 77.
+LaTeX Font Info:    Try loading font information for U+msb on input line 83.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 80.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 86.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 84.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 90.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 91.
+(Font)              <10.95> on input line 97.
  [1
 
 {/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 113--114
+Underfull \hbox (badness 10000) in paragraph at lines 119--120
 
  []
 
@@ -929,69 +943,111 @@ Underfull \hbox (badness 10000) in paragraph at lines 113--114
 File: Synaptic_cleft_project.png Graphic file (type png)
 
 <use Synaptic_cleft_project.png>
-Package pdftex.def Info: Synaptic_cleft_project.png used on input line 117.
+Package pdftex.def Info: Synaptic_cleft_project.png used on input line 123.
 (pdftex.def)             Requested size: 403.26366pt x 125.24496pt.
- [2 <./Synaptic_cleft_project.png>] [3]
-<Grid_FE-figure0.pdf, id=32, 202.61497pt x 131.48323pt>
+ [2 <./Synaptic_cleft_project.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 200--201
+
+ []
+
+[3]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 206.
+ (/usr/local/texlive/2011/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 211.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 211.
+ [4]
+<Grid_FE-figure0.pdf, id=40, 202.61497pt x 131.48323pt>
 File: Grid_FE-figure0.pdf Graphic file (type pdf)
 
 <use Grid_FE-figure0.pdf>
-Package pdftex.def Info: Grid_FE-figure0.pdf used on input line 234.
+Package pdftex.def Info: Grid_FE-figure0.pdf used on input line 256.
 (pdftex.def)             Requested size: 179.22676pt x 116.30746pt.
- [4]
-<Grid_BE-figure0.pdf, id=36, 220.59816pt x 134.32785pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
+
+ []
+
+[5 <./Grid_FE-figure0.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 300--301
+
+ []
+
+[6] <Grid_BE-figure0.pdf, id=68, 220.59816pt x 134.32785pt>
 File: Grid_BE-figure0.pdf Graphic file (type pdf)
 
 <use Grid_BE-figure0.pdf>
-Package pdftex.def Info: Grid_BE-figure0.pdf used on input line 287.
+Package pdftex.def Info: Grid_BE-figure0.pdf used on input line 355.
 (pdftex.def)             Requested size: 179.22676pt x 109.137pt.
- [5 <./Grid_FE-figure0.pdf>] [6 <./Grid_BE-figure0.pdf>] <Grid_CN-figure0.pdf, 
-id=78, 220.59816pt x 134.32785pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 380--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 382--384
+
+ []
+
+[7 <./Grid_BE-figure0.pdf>]
+<Grid_CN-figure0.pdf, id=86, 220.59816pt x 134.32785pt>
 File: Grid_CN-figure0.pdf Graphic file (type pdf)
 
 <use Grid_CN-figure0.pdf>
-Package pdftex.def Info: Grid_CN-figure0.pdf used on input line 336.
+Package pdftex.def Info: Grid_CN-figure0.pdf used on input line 409.
 (pdftex.def)             Requested size: 179.22676pt x 109.137pt.
- (./Project5.bbl [7 <./Grid_CN-figure0.pdf>]) [8]
-(./Project5.aux)
+ [8 <./Grid_CN-figure0.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 441--442
 
-LaTeX Warning: There were multiply-defined labels.
+ []
 
- ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 459--460
+
+ []
+
+[9] (./Project5.bbl) [10] (./Project5.aux) ) 
 Here is how much of TeX's memory you used:
- 6372 strings out of 493633
- 87800 string characters out of 3143377
- 173866 words of memory out of 3000000
- 9489 multiletter control sequences out of 15000+200000
- 60715 words of font info for 57 fonts, out of 3000000 for 9000
+ 6531 strings out of 493633
+ 90295 string characters out of 3143377
+ 176230 words of memory out of 3000000
+ 9621 multiletter control sequences out of 15000+200000
+ 81360 words of font info for 76 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 38i,16n,58p,799b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/lo
-cal/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texliv
-e/2011/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2011/texmf-d
-ist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2011/texmf-dist/fonts/
-enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/l
-m-ts1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmbx10.pfb>
-</usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/loca
-l/texlive/2011/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/
-2011/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2011/texmf
--dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2011/texmf-dist/fonts
-/type1/public/lm/lmmi8.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/publ
-ic/lm/lmmib10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr
-10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr12.pfb></us
-r/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/tex
-live/2011/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2011/te
-xmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2011/texmf-dist/fon
-ts/type1/public/lm/lmr8.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/pub
-lic/lm/lmri10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lms
-y10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></u
-sr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/te
-xlive/2011/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2011
-/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Project5.pdf (8 pages, 354596 bytes).
+ 38i,16n,58p,813b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2011/texmf-dist
+/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc
+/dvips/lm/lm-ec.enc} </Users/Henrik/Library/texlive/2011/texmf-var/fonts/pk/ljf
+our/public/bbm/bbm10.657pk>{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/
+lm/lm-mathsy.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-math
+ex.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/l
+ocal/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/
+2011/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2011/texmf
+-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2011/texmf-dist/font
+s/type1/public/lm/lmex10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/pu
+blic/lm/lmmi10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lm
+mi7.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></u
+sr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/te
+xlive/2011/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/201
+1/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2011/texmf-dis
+t/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2011/texmf-dist/fonts/typ
+e1/public/lm/lmr17.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/l
+m/lmr6.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr7.pfb><
+/usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/t
+exlive/2011/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2011/
+texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2011/texmf-dist
+/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2011/texmf-dist/fonts/typ
+e1/public/lm/lmsy7.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/l
+m/lmsy8.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmtt10.pf
+b></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
+0.pfb>
+Output written on Project5.pdf (10 pages, 403044 bytes).
 PDF statistics:
- 161 PDF objects out of 1000 (max. 8388607)
- 125 compressed objects within 2 object streams
+ 184 PDF objects out of 1000 (max. 8388607)
+ 143 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
