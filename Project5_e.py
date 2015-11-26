@@ -16,7 +16,7 @@ def u_analytic(x, t, N=501):
 	s = 1-x
 	S = 0.0
 	for n in range(1,N):
-		S -= 2.0/(pi*n)*sin(n*pi*x)*exp(-(n*pi)**2*t)
+		S -= 2.0/(pi*n)*sin(n*pi*x)*exp(-n*pi*n*pi*t)
 	return s + S
 
 def read_data(filename):
@@ -62,14 +62,10 @@ for i in range(len(ts_Forward)):
 		x_val = x2[j]
 		#print t_val, x_val, u_analytic(x_val, t_val)
 		u_anal[j] = u_analytic(x_val, t_val)
-
-	#print u
-	ax.plot(x2, u_anal, 'b-') #label='t = %.2f' % t_val)
-	ax.plot(x, us_Backward[i], 'ys')
-	ax.plot(x, us_CrankNic[i], 'g^')
-	ax.plot(x, us_Forward[i], 'r.')
-
-	u_anal = np.zeros(N_x_analytic)
+	ax.plot(x2, u_anal, 'k-') #label='t = %.2f' % t_val)
+	ax.plot(x, us_Backward[i], 'y.--')
+	ax.plot(x, us_CrankNic[i], 'g.--')
+	ax.plot(x, us_Forward[i], 'r.--')
 
 #ax.legend(loc='best',fancybox='True',shadow='True')
 ax.set_xlabel('Position, $x \in [0,1]$')
@@ -79,20 +75,20 @@ ax.grid()
 plt.savefig('Sample_plot.eps', format='eps', dpi=1000)
 plt.show()
  
-for j in range(len(ts_Forward)):
-	t_val = ts_Forward[j]
-	print "Table of average absolute errors. t = %6.3f" % t_val
-	av_er1 = 0; av_er2 = 0; av_er3 = 0
-	for i in range(len(x)-1):
-		x_val = x[i]
-		exact = u_analytic(x_val, t_val)
-		av_er1 += abs(us_Forward[j][i]-exact)
-		av_er2 += abs(us_Backward[j][i]-exact)
-		av_er3 += abs(us_CrankNic[j][i]-exact)
-		#print us_Forward[j][i], exact
-	av_er1 /= float(len(x)-1); av_er2 /= float(len(x)-1); av_er3 /= float(len(x)-1); 
-	print " FE: %6.5f, BE: %6.5f, CN: %6.5f" % (av_er1, av_er2, av_er3)
-	print " "
+# for j in range(len(ts_Forward)):
+# 	t_val = ts_Forward[j]
+# 	print "Table of average absolute errors. t = %6.3f" % t_val
+# 	av_er1 = 0; av_er2 = 0; av_er3 = 0
+# 	for i in range(len(x)-1):
+# 		x_val = x[i]
+# 		exact = u_analytic(x_val, t_val)
+# 		av_er1 += abs(us_Forward[j][i]-exact)
+# 		av_er2 += abs(us_Backward[j][i]-exact)
+# 		av_er3 += abs(us_CrankNic[j][i]-exact)
+# 		#print us_Forward[j][i], exact
+# 	av_er1 /= float(len(x)-1); av_er2 /= float(len(x)-1); av_er3 /= float(len(x)-1); 
+# 	print " FE: %6.5f, BE: %6.5f, CN: %6.5f" % (av_er1, av_er2, av_er3)
+# 	print " "
 
 
 

@@ -1,0 +1,4 @@
+Table of average relative errors. t =   0.05, N_MC = 1000000, dt =  0.00005, tsteps = 1000, average std. = 0.00250913 
+Calculation time: 194.45380 s 
+Averaging over 100.0 internal points: 
+ 0.00187533 

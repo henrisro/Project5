@@ -1,0 +1,8 @@
+Table of average relative errors. t =   0.05 
+Averaging over 9.0 internal points: 
+ FE:      0.11780801, BE:      0.14323264, CN:      0.05546928 
+
+Table of average relative errors. t =   0.30 
+Averaging over 9.0 internal points: 
+ FE:      0.00364511, BE:      0.00599705, CN:      0.00104263 
+
