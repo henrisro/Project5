@@ -25,26 +25,28 @@ def read_data(filename):
 	u_list = [] # Nested list containing lists of solutions for all values of T
 	lines = infile.readlines()
 	prev_line_was_T = 0
-	u = []
+	u = []; calc_times = []
 	flag = 0
 	for line in lines:
 		words = line.split()
 		if len(words) > 1:
-			T_list.append(float(words[-1]))
-			prev_line_was_T = 1
-			u_list.append(u)
-			u = []
+			if words[0][0] == 'S':
+			  T_list.append(float(words[-1]))
+			  prev_line_was_T = 1
+			  u_list.append(u)
+			  u = []
+			else: calc_times.append(float(words[-1]))
 		else:
 			if prev_line_was_T:
 				prev_line_was_T = 0
 			u.append(float(words[-1]))
 	u_list.append(u)
 	# First element of u_list is now empty:
-	return T_list, u_list[1:]
+	return T_list, u_list[1:], calc_times
 
-ts_Forward, us_Forward = read_data('Output1.txt')
-ts_Backward, us_Backward = read_data('Output2.txt')
-ts_CrankNic, us_CrankNic = read_data('Output3.txt')
+ts_Forward, us_Forward, calc1 = read_data('Output1.txt')
+ts_Backward, us_Backward, calc2 = read_data('Output2.txt')
+ts_CrankNic, us_CrankNic, calc3 = read_data('Output3.txt')
 
 N_x = len(us_Forward[0])
 N_x_analytic = 501
@@ -62,17 +64,18 @@ for i in range(len(ts_Forward)):
 		x_val = x2[j]
 		#print t_val, x_val, u_analytic(x_val, t_val)
 		u_anal[j] = u_analytic(x_val, t_val)
-	ax.plot(x2, u_anal, 'k-') #label='t = %.2f' % t_val)
-	ax.plot(x, us_Backward[i], 'y.--')
-	ax.plot(x, us_CrankNic[i], 'g.--')
-	ax.plot(x, us_Forward[i], 'r.--')
+	ax.plot(x2, u_anal, '-', label='$u(x,t=%.2f)$' % t_val) #label='t = %.2f' % t_val)
+	ax.plot(x, us_Forward[i], '--', label='$FE$')
+	ax.plot(x, us_Backward[i], '--', label='$BE$')
+	ax.plot(x, us_CrankNic[i], '--', label='$CN$')
 
 #ax.legend(loc='best',fancybox='True',shadow='True')
 ax.set_xlabel('Position, $x \in [0,1]$')
 ax.set_ylabel('Solution, $u(x,t)$')
-ax.set_title('Solution to diffusion problem') 
+ax.set_title('Solution to diffusion problem')
+ax.legend(loc='best',fancybox='True',shadow='True')
 ax.grid()
-plt.savefig('Sample_plot.eps', format='eps', dpi=1000)
+plt.savefig('Violate_Dt.eps', format='eps', dpi=1000)
 plt.show()
  
 # for j in range(len(ts_Forward)):

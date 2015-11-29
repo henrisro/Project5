@@ -5,9 +5,20 @@ M.~L. Boas.
 \newblock {\em {Mathematical Methods in the Physical Sciences}}.
 \newblock Kaye Pace, 2006.
 
+\bibitem{Farnell}
+L.~Farnell and W.G. Gibson.
+\newblock Monte carlo simulation of diffusion in a spatially nonhomogeneous
+  medium: A biased random walk on an asymmetrical lattice.
+\newblock {\em Journal of Computational Physics}, 208(1):253 -- 265, 2005.
+
 \bibitem{Komp3150}
 M.~Hjort-Jensen.
 \newblock {Computational Physics, Lecture Notes Fall 2015}.
 \newblock Department of Physics, University of Oslo, 2015.
+
+\bibitem{Komp4130}
+F.~Ravndal and E.~G. Flekkøy.
+\newblock {Statistical Physics – a second course}.
+\newblock Department of Physics, University of Oslo, 2014.
 
 \end{thebibliography}

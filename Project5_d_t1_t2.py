@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import os
 
 os.system('g++ Project5_d.cpp -o Project5_d.o -O3 -I /Users/Henrik/FYS4150\ -\ Computational\ physics/armadillo-5.500.2/include -lblas -llapack')
-os.system('./Project5_d.o Output1_compare.txt Output2_compare.txt Output3_compare.txt')
+os.system('./Project5_d.o Output1_compare_n10.txt Output2_compare_n10.txt Output3_compare_n10.txt')
 
 
 # N is the truncation limit in the closed form expression sum:
@@ -25,26 +25,30 @@ def read_data(filename):
 	u_list = [] # Nested list containing lists of solutions for all values of T
 	lines = infile.readlines()
 	prev_line_was_T = 0
-	u = []
+	u = []; calc_times = []
 	flag = 0
 	for line in lines:
 		words = line.split()
 		if len(words) > 1:
-			T_list.append(float(words[-1]))
-			prev_line_was_T = 1
-			u_list.append(u)
-			u = []
+			if words[0][0] == 'S':
+			  T_list.append(float(words[-1]))
+			  prev_line_was_T = 1
+			  u_list.append(u)
+			  u = []
+			else: calc_times.append(float(words[-1]))
 		else:
 			if prev_line_was_T:
 				prev_line_was_T = 0
 			u.append(float(words[-1]))
 	u_list.append(u)
 	# First element of u_list is now empty:
-	return T_list, u_list[1:]
+	return T_list, u_list[1:], calc_times
 
-ts_Forward, us_Forward = read_data('Output1_compare.txt')
-ts_Backward, us_Backward = read_data('Output2_compare.txt')
-ts_CrankNic, us_CrankNic = read_data('Output3_compare.txt')
+ts_Forward, us_Forward, calctimes1 = read_data('Output1_compare_n10.txt')
+ts_Backward, us_Backward, calctimes2 = read_data('Output2_compare_n10.txt')
+ts_CrankNic, us_CrankNic, calctimes3 = read_data('Output3_compare_n10.txt')
+
+print ts_Forward, ts_Backward, ts_CrankNic
 
 N_x = len(us_Forward[0])
 N_x_analytic = 501
@@ -75,35 +79,38 @@ ax.set_title('Diffusion problem for $t_1$ and $t_2$ for three schemes.')
 #ax.plot([0.1985,0.1985],[0.525,0.530],'k-')
 #ax.plot([0.2010,0.2010],[0.525,0.530],'k-')
 
-ax.plot([0.15,0.25],[0.4,0.4],'k-',label='$Zoom$')
-ax.plot([0.15,0.25],[0.6,0.6],'k-')
-ax.plot([0.15,0.15],[0.4,0.6],'k-')
-ax.plot([0.25,0.25],[0.4,0.6],'k-')
+#ax.plot([0.15,0.25],[0.4,0.4],'k-',label='$Zoom$')
+#ax.plot([0.15,0.25],[0.6,0.6],'k-')
+#ax.plot([0.15,0.15],[0.4,0.6],'k-')
+#ax.plot([0.25,0.25],[0.4,0.6],'k-')
 ax.legend(loc='best',fancybox='True',shadow='True')
 #ax.set_xlim(0.15,0.25)
 #ax.set_ylim(0.40,0.60)
 ax.grid()
-plt.savefig('Comparison_n10.eps', format='eps', dpi=1000)
+#plt.savefig('Comparison_n10.eps', format='eps', dpi=1000)
 plt.show()
 
-outfile = open('Results_n10.txt','w')
-for j in range(len(ts_Forward)):
-	t_val = ts_Forward[j]
-	outfile.write("Table of average relative errors. t = %6.2f \n" % t_val)
-	av_er1 = 0; av_er2 = 0; av_er3 = 0
-	M = float(len(range(1,len(x)-1)))
-	outfile.write("Averaging over %.1f internal points: \n" % M)
-	for i in range(1,len(x)-1):
-		x_val = x[i]
-		#print x_val
-		exact = u_analytic(x_val, t_val)
-		av_er1 += abs(us_Forward[j][i]-exact)/exact
-		av_er2 += abs(us_Backward[j][i]-exact)/exact
-		av_er3 += abs(us_CrankNic[j][i]-exact)/exact
-		#print us_Forward[j][i], exact
-	av_er1 /= M; av_er2 /= M; av_er3 /= M; 
-	outfile.write(" FE: %15.8f, BE: %15.8f, CN: %15.8f \n" % (av_er1, av_er2, av_er3))
-	outfile.write("\n")
+# outfile = open('Results_n100.txt','w')
+# for j in range(len(ts_Forward)):
+# 	t_val = ts_Forward[j]
+# 	t_FE = calctimes1[j]; t_BE = calctimes2[j]; t_CN = calctimes3[j]
+# 	outfile.write("Table of average relative errors. t = %6.2f \n" % t_val)
+# 	av_er1 = 0; av_er2 = 0; av_er3 = 0
+# 	M = float(len(range(1,len(x)-1)))
+# 	outfile.write("Averaging over %.1f internal points: \n" % M)
+# 	for i in range(1,len(x)-1):
+# 		x_val = x[i]
+# 		#print x_val
+# 		exact = u_analytic(x_val, t_val)
+# 		av_er1 += abs(us_Forward[j][i]-exact)/exact
+# 		av_er2 += abs(us_Backward[j][i]-exact)/exact
+# 		av_er3 += abs(us_CrankNic[j][i]-exact)/exact
+# 		#print us_Forward[j][i], exact
+# 	av_er1 /= M; av_er2 /= M; av_er3 /= M; 
+# 	outfile.write(" FE: %15.8f, BE: %15.8f, CN: %15.8f \n" % (av_er1, av_er2, av_er3))
+# 	outfile.write("Calculation time used for each method: \n")
+# 	outfile.write(" FE: %15.8f, BE: %15.8f, CN: %15.8f \n" % (t_FE, t_BE, t_CN))
+# 	outfile.write("\n")
 
 
 

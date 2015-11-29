@@ -22,7 +22,7 @@
 \bibliographystyle{plain}
  
 \definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.9,0.9,0.9}
+\definecolor{gray}{rgb}{0.95,0.95,0.95}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
  
 \usepackage{parskip}
@@ -74,7 +74,7 @@
 %
 % Navn og tittel
 %
-\author{Candidate numbers:}
+\author{Candidate number: 70}
 \title{FYS4150 - Computational Physics \\
       Project 5: \\
        Diffusion of neurotransmitters in the synaptic cleft}
@@ -83,7 +83,7 @@
 \maketitle
 
 \begin{abstract}
-In this project we study diffusion of neurotransmitters in the brain across the synaptic cleft. In particular, we look at the solution to the diffusion equation for a particular choice of boundary conditions. Our choice of boundary conditions allows for an analytical solution that is found and later compared to the numerical results. The numerical solutions are found by use of three different integration schemes for partial differential equations: the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicolson scheme. Finally, we compare these deterministic schemes to an implementation based on Monte Carlo methods and random walks. We find that ...\texttt{blah, results, blah}... \\
+In this project we study diffusion of neurotransmitters in the brain across the synaptic cleft. In particular, we look at the solution to the diffusion equation for a particular choice of boundary conditions. Our choice of boundary conditions allows for an analytical solution that is found and later compared to the numerical results. The numerical solutions are found by use of three different integration schemes for partial differential equations: the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicolson scheme. We then make implementations based on Monte Carlo methods. The first random walk simulation is done with constant step length and equal probability of moving left and right. The other variant is based on a step drawn from a Gaussian distribution. The five different methods are compared in terms of accuracy and computation speed. When comparing within the same time step and taking computation speed into account, we find that the Crank-Nicolson scheme gives the overall best results when using $10^5$ or $10^6$ Monte Carlo cycles for the Monte Carlo methods. \\
 \end{abstract}
 
 \begin{itemize}
@@ -108,11 +108,10 @@ u(0,t) = 1 \hspace{2mm} \forall t > 0 \hspace{10pt} \mathrm{and} \hspace{10pt} u
 \label{eq:Boundary_condition}
 \end{equation}
 
-corresponding to a constant release of neurotransmitters at the presynaptic membrane ($u(0,t)$) and a constant absorption of transmitters at the postsynaptic membrane (at $u(d,t)$) at all times. The initial conditions will be taken to be:
+corresponding to a constant release of neurotransmitters at the presynaptic membrane ($u(0,t)$) and a constant absorption of transmitters at the postsynaptic membrane (at $u(d,t)$) at all times. The initial conditions will be taken to be trivial for the interior of the interval:
 
 \begin{equation}
-u(x,t) = \begin{cases} 1  & \mathrm{if} \hspace{2mm} x = 0 \\
-0  & \mathrm{if} \hspace{2mm} x \in(0,d] \end{cases} 
+u(x,t) = 0 \hspace{10pt} \mathrm{for} \hspace{10pt} x\in(0,d) 
 \label{eq:Initial_conditions}
 \end{equation}
 
@@ -125,11 +124,11 @@ This basically means that all the neurotransmitters are located at $x=0$ initial
 \label{fig:Synaptic_cleft}
 \end{figure}
 
-The solutions will be studied by implementation of three different deterministic schemes in addition to a Monte Carlo based method. We will look in some detail at the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicholson scheme for partial differential equations (PDEs). The methods are compared in terms of precision and stability. 
+The solutions will be studied by implementation of three direct solver schemes and Monte Carlo based methods where we simulate diffusion as a random walk process. For the direct solvers we will look in some detail at the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicholson scheme for partial differential equations (PDEs). The methods are compared in terms of precision (i.e. truncation errors) and stability. We also simulate the system as a random walk, first with a constant step length and equal probability of moving left and right. In the second approach we draw step lengths from a normal distribution. 
 
 \section{Theory}
 
-In this section we derive the analytical solution to the diffusion problem outlined above. The closed form expression of the solution, although it will take the form of an infinite sum, will be valuable in terms of judging the numerical results later. 
+In this section we derive the analytical solution to the diffusion problem outlined above. The closed form expression of the solution, although it will take the form of an infinite sum, will be valuable in terms of judging the numerical results later. We also provide some background material on random walks and the link to diffusion. This is the basics of the Monte Carlo methods discussed in the method/algorithm section.
 
 \subsection{Analytical solution}
 To solve the one dimensional diffusion equation, 
@@ -142,11 +141,11 @@ To solve the one dimensional diffusion equation,
 with the boundary conditions in (\ref{eq:Boundary_condition}) and initial conditions in (\ref{eq:Initial_conditions}), we apply the standard \emph{separation of variables} ansatz:
 
 \begin{equation}
- u(x,t) = X(x)T(t) + u_s(x)
+ u(x,t) = v(x,t) + u_s(x) = X(x)T(t) + u_s(x)
 \label{eq:Separation of variables}
 \end{equation}
 
-We here separate out the steady-state solution $u_s(x) = 1-x$, which trivially satisfies equation (\ref{eq:Basic_problem}). When inserted into equation (\ref{eq:Basic_problem}) we arrive at:
+We here separate out the steady-state solution $u_s(x) = 1-x$ (this is just a particular solution of the differential equation which then forces $v(x)$ to have Dirichlet boundary conditions), which trivially satisfies equation (\ref{eq:Basic_problem}). When inserted into equation (\ref{eq:Basic_problem}) we arrive at:
 
 \begin{equation}
 \frac{1}{X} \frac{d^2 X}{dx} = \frac{1}{T}\frac{dT}{dt} = -k^2
@@ -167,7 +166,7 @@ T_n(x) = \exp(-(n\pi)^2t)
 \label{eq:Separated_T_solution}
 \end{equation}
 
-The general solution is then a sum of (possibly all) the modes $X_n(x)T_n(t)$:
+It has a general solution as a sum of (possibly all) the modes $X_n(x)T_n(t)$:
 
 \begin{equation}
 u(x,t) = 1-x +\sum_{n=1}^{\infty} b_n \sin(n\pi x) e^{-(n\pi)^2t}
@@ -177,15 +176,15 @@ u(x,t) = 1-x +\sum_{n=1}^{\infty} b_n \sin(n\pi x) e^{-(n\pi)^2t}
 The final step is to determine the coefficients $b_n$ such that $u(x,0)$ fits the initial conditions in equation (\ref{eq:Initial_conditions}). This can be rewritten as 
 
 \begin{equation}
-\sum_{n=1}^{\infty} b_n \sin(n\pi x) = u_0(x) =  \begin{cases} 0 & \mathrm{if} \hspace{2mm} x = 0 \\
+\sum_{n=1}^{\infty} b_n \sin(n\pi x) = v_0(x) =  \begin{cases} 0 & \mathrm{if} \hspace{2mm} x = 0 \\
 x-1 & \mathrm{if} \hspace{2mm} x \in (0,1] \end{cases}
 \label{eq:Initial_cond_fit}
 \end{equation}
 
-This is just as the Fourier series of the odd extension of the function $u_0(x)$ on the interval $[0,1]$. The coefficients are determined by Fourier's trick (see for instance \cite{Boas}):
+This rightmost expression is also the initial condition for the solution $v(x,t)$ which will be discussed in the context of Monte Carlo methods later. The sum above is just the Fourier series of the odd extension of the function $v_0(x)$ on the interval $[0,1]$. The coefficients are determined by Fourier's trick (see for instance \cite{Boas}):
 
 \begin{equation}
-b_n = 2\int_0^1 dx \hspace{1mm} (x-1) \sin(n\pi x) = -\frac{2}{n\pi}
+b_n = \frac{2}{L}\int_0^L dx \hspace{1mm} v_0(x)\sin\left( \frac{n \pi x}{L}\right) = 2\int_0^1 dx \hspace{1mm} (x-1) \sin(n\pi x) = -\frac{2}{n\pi}
 \label{eq:Fourier_trick}
 \end{equation}
 
@@ -196,7 +195,70 @@ We hence have arrived at the final closed form solution:
 \label{eq:Final_solution}
 \end{equation}
 
+\subsection{Random walks and diffusion}
+\label{sec:RW}
+We devote this section to studying how random walks in one dimension are linked to diffusion through the \emph{central limit theorem} when the number of steps become large. Much of the material in this section is based on \cite{Komp4130}. \\ 
+
+Consider a random walk with $N$ steps of step length $\ell_0$ and no boundaries. Denote the probability of taking a step to the right by $p$ and to the left by $q = 1-p$ (a symmetric walk has of course $p=q=1/2$). One can quite easily be convinced that out of a total of $N$ steps, the probability of finding the walker at exactly $R$ steps to the right (and $L$ to the left, $R+L = N$) is given by the \emph{Bernoulli distribution}:
+
+\begin{equation}
+P_N(R) = \binom{N}{R} p^R q^{N-R}
+\label{eq:RW_Bernoulli}
+\end{equation}
+
+The normalization, $\sum_{R=0}^N P_N(R) = 1$, follows readily from the binomial formula. By some small tricks with the binomial coefficients, one can use this distribution to find for instance $\langle R \rangle = Np$ and $\langle R^2 \rangle = (Np)^2 + Npq$. These quantities can in turn be exploited further to find the average displacement, 
+
+\begin{equation}
+\langle S \rangle = (2 \langle R \rangle - N)\ell_0 = N(p-q)\ell_0
+\label{eq:RW_displacement}
+\end{equation}
+
+and square displacement:
+
+\begin{equation}
+\langle S^2 \rangle = (4\langle R^2 \rangle -4N\langle R \rangle +  N^2)\ell_0^2 = N^2(p-q)^2\ell_0^2 + 4Npq\ell_0^2
+\label{eq:RW_displacement_sq}
+\end{equation}
+
+This yields the variance of the $N$-step walk:
+
+\begin{equation}
+\sigma_N^2 = \langle S^2 \rangle - \langle S \rangle^2 = 4Npq\ell_0^2 \propto N
+\label{eq:RW_variance}
+\end{equation}
+
+The proportionality, meaning a distribution that widens proportional to the square root of time (time meaning the number of steps), is in fact a clear sign of a diffusion like process. We now move swiftly over to the large $N$ limit. The symmetric distribution ($p=q=1/2$) can be expanded using Stirling's formula, $N! \approx \sqrt{2\pi N} N^N e^{-N}$. Keeping only the lowest order in $S/(N\ell_0)$ gives the following result after some algebraic manipulations:
+
+\begin{equation}
+P_N(S) = \left( \frac{1}{2} \right)^N \frac{N!}{L!R!} \approx \sqrt{\frac{2}{\pi N}} e^{-S^2/(2N\ell_0^2)} \to \frac{1}{\sqrt{4\pi D t}} e^{-\frac{x^2}{4Dt}} = P(x,t)
+\label{eq:RW_symmetric_largeN}
+\end{equation}
+
+The last expression is a properly normalized ($\int_{-\infty}^{\infty} dx \hspace{1mm} P(x,t) =1 $) continuum limit of the same distribution with some conventional choice of constants and $N$ basically replaced by time\footnote{The limit formally occurs by the replacements: $x = S$, $t = N\tau$ with $\tau$ the time of one step and $D = \ell_0^2/(2\tau)$ as diffusion constant. Normalization gives the correct prefactor.}. This continuum distribution is in fact more generally a consequence of \emph{the central limit theorem}. This theorem briefly summarized states that if variable $X = \sum_{i=1}^N x_i$ is the sum of some stochastically independent variables $x_i$ drawn from a distribution $p(x)$ with zero mean $\langle x \rangle = 0$ and finite variance $\sigma_x^2 \in \mathbb{R}^+$, the distribution $P(X)$ will tend to a Gaussian with variance $\sigma_X^2 = N\sigma_x^2$ as $N$ becomes large. \\
+
+For free particles described by the concentration\footnote{Observe also that $\lim_{t\to 0}C(x,t) = N\delta(x)$ – all particles located at $x=0$ initially.} $C(x,t) = NP(x,t)$ with $P(x,t)$ given as in equation (\ref{eq:RW_symmetric_largeN}), one can actually derive the diffusion equation by the use of Fick's law. Fick's law in one dimensions for the distribution $P(x,t)$ states that the particle current is given by 
+
+\begin{equation}
+J_x = \frac{d}{dt} \int_x^{\infty} dx \hspace{1mm} C(x,t) = -D \frac{\partial C(x,t)}{\partial x}
+\label{eq:Fick_law}
+\end{equation}
+
+This is not hard to prove by direct differentiation (the law holds for non-interacting particles). In higher dimensions, the law would more generally take the form $\boldsymbol{J}(\boldsymbol{r},t) = - D \nabla C(\boldsymbol{r},t)$. We now combine this law with Gauss' theorem (relating surface and volume integrals) to show that the concentration satisfies the diffusion equation. The starting point is the continuity equation:
+
+\begin{align}
+ \frac{d}{dt} \int_V dV \hspace{1mm} C(\boldsymbol{r},t) &= \oint_S d\boldsymbol{S} \cdot \boldsymbol{J}(\boldsymbol{r},t) \\
+ \int_V dV \hspace{1mm} \frac{\partial C(\boldsymbol{r},t)}{\partial t} &= -D\oint_S d\boldsymbol{S} \cdot \nabla C(\boldsymbol{r},t) \\
+  \int_V dV \hspace{1mm} \frac{\partial C(\boldsymbol{r},t)}{\partial t} &= -D\int_V dV \hspace{1mm} \nabla^2 C(\boldsymbol{r},t) \Rightarrow  \\
+  \frac{\partial C(\boldsymbol{r},t)}{\partial t} + D \nabla^2 C(\boldsymbol{r},t) &= 0
+\label{eq:Diffusion_Gauss_theorem}
+\end{align}
+
+Now, this provides us with a basic understanding of the link between a set of  discrete random walks (easily simulated computationally) and the macroscopic phenomena of diffusion. We will exploit this link when discussing Monte Carlo methods.
+
+
 \subsection{Stability of matrix iterations}
+We here very briefly state a theorem (brought from \cite{Komp3150}) that will be applied in the discussion of the three direct solvers in the next section. \\
+
 Suppose we are given the iteration $\boldsymbol{V}_i = A \boldsymbol{V}_{i-1}$ for some matrix $A$ and vectors $\boldsymbol{V}_i$. This implies that the vector after $n$ iterations is given in terms of the initial one as: $\boldsymbol{V}_n = A^n \boldsymbol{V}_0$. By expanding $\boldsymbol{V}_0$ in the eigenvector basis of $A$, we can quickly understand the following theorem quite intuitively: \\
 
 \begin{theorem}
@@ -218,14 +280,16 @@ This section is devoted to the discussion of the three deterministic schemes for
 \label{eq:Step_length}
 \end{equation}
 
-such that $x \mapsto x_i = i\Delta x$ for $i \in \{0,1,\dots,n+1 \}$. A corresponding discretization in time is given by $\Delta t$ (we will later discuss how this should be chosen depending on $\Delta x$, i.e. $n$). This means that $t\mapsto t_j = j\Delta t$ for $j\in \mathbb{N}$. The following discussion will be made in the context of the diffusion equation, here written compactly as $u_{xx} = u_t$ (the subscripts refer to derivatives). After discretization we use the notation $u(x,t) \mapsto u(x_i, t_j) \equiv u_{i,j}$. The following definition will also appear frequently in what follows:
+such that $x \mapsto x_i = i\Delta x$ for $i \in \{0,1,\dots,n+1 \}$. The boundary conditions fixes the values at $i=0,n+1$, so we are left with $n-1$ internal points interest. A corresponding discretization in time is given by $\Delta t$ (we will later discuss how this should be chosen depending on $\Delta x$, i.e. $n$). This means that $t\mapsto t_j = j\Delta t$ for $j\in \mathbb{N}$. The following discussion will be made in the context of the diffusion equation, here written compactly as $u_{xx} = u_t$ (the subscripts refer to derivatives). After discretization we use the notation $u(x,t) \mapsto u(x_i, t_j) \equiv u_{i,j}$. The following definition will also appear frequently in what follows:
 
 \begin{equation}
  \alpha \equiv \frac{\Delta t}{\Delta x^2}
 \label{eq:Step_parameter}
 \end{equation}
 
-The following discussion and derivations follow \cite{Komp3150} closely.
+The following discussion and derivations follow \cite{Komp3150} closely. The discussion below is made in the context of the later implementation with a notation that is close to the one found in the written code. We note that the Forward Euler method was implemented in terms of $u(x,t)$ directly while the two implicit schemes (and the Monte Carlo schemes) were done for $v(x,t)$ (adding $u_s(x) = 1-x$ in the end) due to its more easily handled Dirichlet boundary conditions. \\
+
+In the last subsection we discuss the two Monte Carlo based algorithms for a random walk that were implemented during the work with this project. We also discuss the basic terms related to Monte Carlo samplings that are relevant in this context.
 
 \subsection{Forward Euler scheme}
 In this scheme we use the two simplest possible approximations for the derivatives $u_{xx}$ and $u_t$:
@@ -235,7 +299,7 @@ u_{xx} \approx \frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x, t)}{\Delta x^2} \maps
 \label{eq:Forward_uxx}
 \end{equation}
 
-and
+and the \emph{forward} time derivative
 
 \begin{equation}
 u_{t} \approx \frac{u(x,t+\Delta t)-u(x, t)}{\Delta t} \mapsto \frac{1}{\Delta t} (u_{i,j+1}-u_{i,j})
@@ -258,12 +322,12 @@ u_{xx} &= u_t \Rightarrow \\
  \label{fig:FE_grid}
 \end{figure}
 
-This scheme is explicit in the sense that it gives a recipe of how to find the solution at the next time step given the solution at the previous one. It should be initialized with the initial condition, $u_{i,0} = u_0(x_i)$ as given in equation (\ref{eq:Initial_cond_fit}). In terms of a matrix equation we can write:
+This scheme is explicit in the sense that it gives a recipe of how to find the solution at the next time step given the solution at the previous one. It should be initialized with the initial condition, $u_{i,0} = u_0(x_i)$ as given in equation (\ref{eq:Initial_conditions}). In terms of a matrix equation we can write:
 
 \begin{align}
 \boldsymbol{U}_{j+1} &= A \boldsymbol{U}_j \\
 \begin{bmatrix}
-u_{1,j+1} \\ u_{2,j+1} \\ \vdots \\ u_{n,j+1}
+u_{1,j+1} \\ u_{2,j+1} \\ \vdots \\ u_{n-1,j+1}
 \end{bmatrix}
 &=
 \begin{bmatrix}
@@ -273,12 +337,16 @@ u_{1,j+1} \\ u_{2,j+1} \\ \vdots \\ u_{n,j+1}
  0 & 0 & 0 & \cdots & \alpha & 1-2\alpha \\
 \end{bmatrix}
 \begin{bmatrix}
-u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
+u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n-1,j}
+\end{bmatrix}
++
+\begin{bmatrix}
+\alpha \\ 0 \\ \vdots \\ 0
 \end{bmatrix}
 \label{eq:Forward_Euler_matrix}
 \end{align}
 
-with the initial condition (in our case) $\boldsymbol{U}_0 = ( u_0(\Delta x), u_0(2\Delta x), \dots, u_0(1))^T = (1,0,\dots,0)^T$. It is appropriate, also for later reference, to decompose the matrix as $A = \id - \alpha B$ where the elements of $B$ can be expressed in terms of Kronecker deltas: 
+where we explicitly took care of the boundary conditions in the constant vector being added (since to $u_{0,j} = 1$ and $u_{n,j} = 0$) and only care about the $n-1$ internal points. It is appropriate, also for later reference, to decompose the matrix as $A = \id - \alpha B$ where the elements of $B$ can be expressed in terms of Kronecker deltas: 
 
 \begin{equation}
 B_{i,j} = 2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}
@@ -287,17 +355,48 @@ B_{i,j} = 2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}
 
 The subscripts here refer to matrix indices and have nothing to do with time and space coordinates as earlier. \\
 
+\textbf{Algorithm} \newline
+The implementation of the explicit scheme is rather straight forward (basically equation (\ref{eq:Forward_Euler_scheme})). We have shown the core of the function \texttt{Forward\_Euler()} in listing \ref{lst:FE}. The function \texttt{Output\_write()} is a function that writes the results of a given time step – more precisely at \texttt{iter1} and \texttt{iter2} corresponding to absolute times $t_1 = 0.05$ and $t_2 = 0.3$ – to a plain text file for later plotting. The function \texttt{func(double x)} is a simple function that reflects the initial conditions of $u$: $u(x,0)$.
+
+\lstset{language=C++,caption={Code sample: the main content of the function \texttt{void Forward\_Euler()}. Its full implementation can be found in \texttt{Project5\_d.cpp}.},label={lst:FE}}
+\begin{center}
+\begin{lstlisting}
+  u(0) = unew(0) = 1.0;
+  u(n) = unew(n) = 0.0;
+  // Initialize the vector acording to the initial condition in func(x):
+  for (int i=1; i < n; i++) { // Initialize only interior solution
+  	x_val = i*delta_x;
+  	u(i) = func(x_val);
+  	unew(i) = 0;
+  }
+  // Time integration according to the explicit scheme:
+  for (int j = 1; j <= tsteps; j++) {
+  	t_val = j*delta_t;
+  	for (int i = 1; i < n; i++) {
+  		unew(i) = alpha*u(i-1) + (1 - 2*alpha)*u(i) + alpha*u(i+1);
+  	}
+  	u = unew;
+  	if (j == iter1 or j == iter2) {
+  	  // Write current values (all x) to txt file:
+  	  Output_write(unew, t_val, n);
+    }
+  }
+\end{lstlisting}
+\end{center}
+
 \textbf{Truncation errors} \newline
 The discretized equations in (\ref{eq:Forward_uxx}) and (\ref{eq:Forward_ut}) are easily seen to come from the Taylor expansions (with step lengths $\Delta x$ and $\Delta t$ respectively) around $u(x,t)$ 
 
 \begin{align}
-u(x\pm\Delta x,t) &= u(x,t) \pm \frac{\partial u(x,t)}{\partial x}\Delta x + \frac{\partial^2 u(x,t)}{\partial x^2}\Delta x^2 + \mathcal{O}(\Delta x^3)
+u(x\pm\Delta x,t) &= u(x,t) \pm \frac{\partial u(x,t)}{\partial x}\Delta x + \frac{1}{2}\frac{\partial^2 u(x,t)}{\partial x^2}\Delta x^2 + \mathcal{O}(\Delta x^3)
 \label{eq:Forward_Euler_expansions1} \\
 u(x,t\pm \Delta t) &= u(x,t) \pm \frac{\partial u(x,t)}{\partial t}\Delta t + \mathcal{O}(\Delta t^2)
 \label{eq:Forward_Euler_expansions2}
 \end{align}
 
-and spell out for us that the Forward Euler scheme gives rise to errors of orders $\mathcal{O}(\Delta t)$ and $\mathcal{O}(\Delta x^2)$ when inserted into (\ref{eq:Forward_uxx}) and (\ref{eq:Forward_ut}). \\
+and readily spell out for us that the Forward Euler scheme gives rise to errors of orders $\mathcal{O}(\Delta t)$ and $\mathcal{O}(\Delta x^2)$ when inserted into (\ref{eq:Forward_uxx}) and (\ref{eq:Forward_ut}). \\
+
+% SHOULD THESE BE FOUND EXACT?
 
 \textbf{Stability condition} \newline
 To determine for what combinations of $\Delta t$ and $\Delta x$ the Forward Euler scheme is stable, we investigate the spectral radius of the matrix $B$ (the other part of $A = \id - \alpha B$ is proportional to $\id$ and gives rise to a simple unit contribution to the eigenvalues):
@@ -308,7 +407,7 @@ To determine for what combinations of $\Delta t$ and $\Delta x$ the Forward Eule
 \label{eq:Forward_Euler_stability1}
 \end{align}
 
-We continue with expanding the vector components in a sine basis $v_i = \sin(i\theta)$ with $\theta = $ such that
+We continue with expanding the vector components in a sine basis $v_i = \sin(i\theta)$ with $\theta = \pi/(n+1)$ such that
 
 \begin{align}
 \sum_{j=1}^n [2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}]v_j &= \lambda_i v_i \\
@@ -327,7 +426,7 @@ Hence in order to have $\rho(A) < 1$, we must have
 The extremal eigenvalue occurs when $\theta = \pi$, at which the final inequality follows.
 
 \subsection{Backward Euler scheme}
-The Backward Euler scheme (just like for ordinary differential equations) exploits a time derivative approximation with a function evaluation backwards in time and the same approximation for $u_{xx}$ as in equation (\ref{eq:Forward_uxx}). We (re)state both approximations to have a clear argument:
+The Backward Euler scheme (just like for ordinary differential equations) exploits a time derivative approximation with a function evaluation \emph{backwards} in time and the same approximation for $u_{xx}$ as in equation (\ref{eq:Forward_uxx}). We (re)state both approximations to have a clear argument:
 
 \begin{equation}
 u_{xx} \approx \frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x, t)}{\Delta x^2} \mapsto \frac{1}{\Delta x^2} (u_{i+1,j}-2u_{i,j}+u_{i-1,j})
@@ -357,10 +456,10 @@ u_{xx} &= u_t \Rightarrow \\
  \label{fig:BE_grid}
 \end{figure}
 
-This recursion relation backwards in time does, as compared to the Forward Euler scheme, not give us the solution for the next time step in terms of the previous one. It instead takes the following form when written in matrix notation:
+This recursion relation backwards in time does, as compared to the Forward Euler scheme, not give us the solution for the next time step in terms of the previous one. At this point we also move over to solving for $v(x,t) \mapsto v_{i,j}$ instead of $u(x,t)$ to more easily control the boundary conditions and to make the notation close to the mathematical one in our specific problem. Note that the initial condition for $v(x,t)$ is given in (\ref{eq:Initial_cond_fit}). This time the matrix equations takes the following form:
 
 \begin{align}
-C \boldsymbol{U}_j &= \boldsymbol{U}_{j-1} \\
+C \boldsymbol{V}_j &= \boldsymbol{V}_{j-1} \\
 \begin{bmatrix}
  1+2\alpha & -\alpha & 0 & \cdots & 0 & 0 \\
  -\alpha & 1+2\alpha & -\alpha & \cdots & 0 & 0 \\
@@ -368,16 +467,52 @@ C \boldsymbol{U}_j &= \boldsymbol{U}_{j-1} \\
  0 & 0 & 0 & \cdots & -\alpha & 1+2\alpha \\
 \end{bmatrix}
 \begin{bmatrix}
-u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
+v_{1,j} \\ v_{2,j} \\ \vdots \\ v_{n-1,j}
 \end{bmatrix}
 &=
 \begin{bmatrix}
-u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
+v_{1,j-1} \\ v_{2,j-1} \\ \vdots \\ v_{n-1,j-1}
 \end{bmatrix}
 \label{eq:Backwards_Euler_matrix}
 \end{align}
 
-with $C = \id + \alpha B$ and $B$ is the same as in (\ref{eq:Matrix_B}). This asks for, at each time step $j$, nothing else than a set of linear equations to be solved. Phrased differently, a matrix inversion (meaning we must find $C^{-1}$ with $C$ tridiagonal as above) would give us the solution at each time step straight away: $\boldsymbol{U}_j = C^{-1} \boldsymbol{U}_{j-1}$. However, a matrix-vector multiplication at each time step is computationally consuming as it costs $\mathcal{O}(n^2)$ FLOPS and the matrix inversion even worse with its $\mathcal{O}(n^3)$ FLOPS. From Project 1, however, we know that solving such equations for a tridiagonal matrix can be done by an algorithm that takes only $\mathcal{O}(n)$ FLOPS; far superior when the dimension becomes large. \\
+with $C = \id + \alpha B$ and $B$ is the same as in (\ref{eq:Matrix_B}). This asks for, at each time step $j$, nothing else than a set of linear equations to be solved. Phrased differently, a matrix inversion (meaning we must find $C^{-1}$ with $C$ tridiagonal as above) would give us the solution at each time step straight away: $\boldsymbol{V}_j = C^{-1} \boldsymbol{V}_{j-1}$. However, a matrix-vector multiplication at each time step is computationally consuming as it costs $\mathcal{O}(n^2)$ FLOPS and the matrix inversion even worse with its $\mathcal{O}(n^3)$ FLOPS. From Project 1, however, we know that solving such equations for a tridiagonal matrix can be done by an algorithm that takes only $\mathcal{O}(n)$ FLOPS\footnote{In project 1 we used an algorithm requiring $8(n-1)$ FLOPS for solving a tridiagonal set of linear equations.}; far superior when the dimension becomes large. Thus the increase in FLOPS when using the implicit scheme in favour of the explicit scheme, does pay off in a much weaker stability condition. \\
+
+\textbf{Algorithm} \newline
+To use the Backward Euler scheme we chose to bring in the tridiagonal matrix solver from project 1. It is gathered in a function called \texttt{void tridiag()} which makes use of armadillo vectors. The basic implementation of the implicit scheme (meaning equation (\ref{eq:Backwards_Euler_matrix})) is shown in listing \ref{lst:BE}. This time, \texttt{func2(double x)} is a function which returns the initial condition for $v(x,t)$, not $u(x,t)$. \newpage
+
+\lstset{language=C++,caption={Code sample: the main content of the function \texttt{void Backward\_Euler()}. Its full implementation can be found in \texttt{Project5\_d.cpp}.},label={lst:BE}}
+\begin{center}
+\begin{lstlisting}
+  // Boundary conditions:
+  v(0) = vnew(0) = 0.0;
+  v(n) = vnew(n) = 0.0;
+  a = c = -alpha; 
+  b = 1+2*alpha; 
+  // Initialize the vector according to the initial condition in func2(x):
+  for (int i=1; i < n; i++) { // Initialize only interior solution
+    x_val = i*delta_x; v(i) = func2(x_val); vnew(i) = 0;
+  }
+  // Time loop:
+  for (int j = 1; j <= tsteps; j++) {
+    t_val = j*delta_t;
+    tridiag(a, b, c, v, vnew, n-1); // Solver for tridiagonal matrix problem
+    v(0) = vnew(0) = 0.0;
+    v(n) = vnew(n) = 0.0;
+    // Update old result for next loop iteration:
+    v = vnew;
+    if (j == iter1 or j == iter2) {
+      for (int l=1; l<n; l++) {
+        v_val = vnew(l);
+        unew(l) = v_val + 1.0 - l*delta_x;
+      }
+      unew(0) = 1.0; unew(n) = 0.0;
+      // Write current values (all x) to txt file:
+      Output_write(unew, t_val, n);
+    }
+  }
+\end{lstlisting}
+\end{center}
 
 \textbf{Truncation errors} \newline
 Equations in (\ref{eq:Backward_uxx}) and (\ref{eq:Backward_ut}), just as for the Forward Euler scheme, stem from the Taylor expansions (with step lengths $\Delta x$ and $\Delta t$ respectively) as in equation (\ref{eq:Forward_Euler_expansions1}) and (\ref{eq:Forward_Euler_expansions2}). It is straight forwardly seen that this scheme gives identical truncation errors – of orders $\mathcal{O}(\Delta t)$ and $\mathcal{O}(\Delta x^2)$ – just as in the explicit method. \\
@@ -411,11 +546,10 @@ Adding the two equations gives the Crank-Nicolson scheme\footnote{A more general
  \label{fig:CN_grid}
 \end{figure}
 
-
-or in matrix notation:
+or in matrix notation (we also this time move over to considering $v(x,t)$ instead of $u(x,t)$ due to the simple boundary conditions):
 
 \begin{align}
-(2\id + \alpha B) \boldsymbol{U}_j &= (2\id - \alpha B) \boldsymbol{U}_{j-1} \\
+(2\id + \alpha B) \boldsymbol{V}_j &= (2\id - \alpha B) \boldsymbol{V}_{j-1} \\
 \begin{bmatrix}
  2+2\alpha & -\alpha & 0 & \cdots & 0 & 0 \\
  -\alpha & 2+2\alpha & -\alpha & \cdots & 0 & 0 \\
@@ -423,7 +557,7 @@ or in matrix notation:
  0 & 0 & 0 & \cdots & -\alpha & 2+2\alpha \\
 \end{bmatrix}
 \begin{bmatrix}
-u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
+v_{1,j} \\ v_{2,j} \\ \vdots \\ v_{n-1,j}
 \end{bmatrix}
 &= \\
 \begin{bmatrix}
@@ -433,30 +567,68 @@ u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n,j}
  0 & 0 & 0 & \cdots & \alpha & 2-2\alpha \\
 \end{bmatrix}
 &\begin{bmatrix}
-u_{1,j-1} \\ u_{2,j-1} \\ \vdots \\ u_{n,j-1}
+v_{1,j-1} \\ v_{2,j-1} \\ \vdots \\ v_{n-1,j-1}
 \end{bmatrix}
 \label{eq:Crank_Nicolson_matrix}
 \end{align}
 
-Thus $\boldsymbol{U}_j = (2\id+\alpha B)^{-1}(2\id - \alpha B)\boldsymbol{U}_{j-1}$. This looks very similar to the Backward Euler scheme with the only difference that we must at each time step first calculate $\tilde{\boldsymbol{U}}_{j-1} = (2\id - \alpha B)\boldsymbol{U}_{j-1}$ before sending $(2\id + \alpha B)\boldsymbol{U}_j = \tilde{\boldsymbol{U}}_{j-1}$ to the tridiagonal matrix solver. \\
+Thus $\boldsymbol{V}_j = (2\id+\alpha B)^{-1}(2\id - \alpha B)\boldsymbol{V}_{j-1}$. This looks very similar to the Backward Euler scheme with the only difference that we must at each time step first calculate $\tilde{\boldsymbol{V}}_{j-1} = (2\id - \alpha B)\boldsymbol{V}_{j-1}$ before sending $(2\id + \alpha B)\boldsymbol{V}_j = \tilde{\boldsymbol{V}}_{j-1}$ to the tridiagonal matrix solver. \\
+
+\textbf{Algorithm} \newline
+The Crank-Nicolson scheme makes use of the same tridiagonal matrix solver as the implicit scheme. The main difference from the previous scheme is however that we must add the calculation of $\tilde{\mathbf{V}}_{j-1}$ before passing the problem on to \texttt{tridiag()}. The main content of the written Crank-Nicolson function is shown in listing \ref{lst:CN}. 
+
+\lstset{language=C++,caption={Code sample: the main content of the function \texttt{void Crank\_Nicolson()}. Its full implementation can be found in \texttt{Project5\_d.cpp}.},label={lst:CN}}
+\begin{center}
+\begin{lstlisting}
+// Boundary conditions:
+  v(0) = vnew(0) = 0.0;
+  v(n) = vnew(n) = 0.0;
+  a = c = -alpha; 
+  b = 2+2*alpha; 
+  for (int i=1; i < n; i++) { // Initialize only interior solution
+    x_val = i*delta_x; v(i) = func2(x_val); vnew(i) = 0;
+  }
+  // Time loop: 
+  for (int j = 1; j <= tsteps; j++) {
+    t_val = j*delta_t;
+    for (int l=1; l < n; l++) {
+         y(l) = alpha*v(l+1) + (2 - 2*alpha)*v(l) + alpha*v(l-1);
+    }
+    tridiag(a, b, c, y, vnew, n-1); // Solver for tridiagonal matrix goes here.
+    v(0) = vnew(0) = 0.0;
+    v(n) = vnew(n) = 0.0;
+    // Update old result for next loop iteration:
+    v = vnew;
+    if (j == iter1 or j == iter2) {
+      for (int l=1; l<n; l++) {
+        v_val = vnew(l);
+        unew(l) = v_val + 1.0 - l*delta_x;
+      }
+      unew(0) = 1.0; unew(n) = 0.0;
+      // Write current values (all x) to txt file:
+      Output_write(unew, t_val, n);
+    }
+  }
+\end{lstlisting}
+\end{center}
 
 \textbf{Truncation errors} \newline
 The Crank-Nicolson scheme was presented above as the sum of two equally weighted contributions to $u_t$ – at steps $j+1$ and $j$ (figure \ref{fig:CN_grid}). The formulas for $u_{xx}$ were not altered, so the truncation errors in $x$ are still of the same order $\mathcal{O}(\Delta x^2)$. To see what happens to the truncation in $t$, we can Taylor expand the involved quantities around $t' = t + \Delta t /2$ and only care about the errors in powers of $\Delta t$:
 
 \begin{align}
-u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
-&+ \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \pm \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
+u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
+&+ \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \pm \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
 \label{eq:Crank_Nicolson_expansions1} \\
-u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
-&- \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \mp \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
+u(x\pm\Delta x,t) &= u(x,t') \pm \frac{\partial u(x,t')}{\partial x}\Delta x + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial x^2}\Delta x^2 + \\
+&- \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4} \mp \frac{\partial^2 u(x,t')}{\partial x \partial t}\frac{\Delta x \Delta t}{2} + \mathcal{O}(\Delta t^3)
 \label{eq:Crank_Nicolson_expansion2} \\
-u(x,t+\Delta t) &= u(x,t') + \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
+u(x,t+\Delta t) &= u(x,t') + \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
 \label{eq:Crank_Nicolson_expansion3} \\
-u(x,t) &= u(x,t') - \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
+u(x,t) &= u(x,t') - \frac{\partial u(x,t')}{\partial t}\frac{\Delta t}{2} + \frac{1}{2}\frac{\partial^2 u(x,t')}{\partial t^2}\frac{\Delta t^2}{4}  + \mathcal{O}(\Delta t^3)
 \label{eq:Crank_Nicolson_expansion4}
 \end{align}
 
-Putting these expansions carefully into equation (\ref{eq:Crank_Nicoloson_scheme}) (with the discretized labellings such as $u(x+\Delta x,t) = u_{i+1,j}$ etc.) and collecting the surviving terms, one does in fact see that the leading order truncation error in time is $\mathcal{O}(\Delta t^2)$ – an improvement as compared to the Forward and Backward Euler schemes. \\
+Putting these expansions carefully into equation (\ref{eq:Crank_Nicoloson_scheme}) (with the discretized labellings such as $u(x+\Delta x,t) = u_{i+1,j}$ etc.) and collecting the surviving terms, one can easily check that the terms to order $\mathcal{O}(\Delta t)$ cancel (this is in fact due to the equal weighting of the Forward and Backward Euler methods in the definition of the Crank-Nicolson scheme). The leading order truncation error in time is then seen to be $\mathcal{O}(\Delta t^2)$ – an improvement as compared to the Forward and Backward Euler schemes. \\
 
 \textbf{Stability condition} \newline
 We need to look at the spectral radius of $(2\id + \alpha B)^{-1}(2\id -\alpha B)$. We can also this time reuse some earlier derived results. Recall the eigenvalues of $B$: $\lambda_i = 2(1-\cos(\theta) ) \in (0,4]$. The spectral radius condition thus translates to the following in this case:
@@ -469,20 +641,238 @@ We need to look at the spectral radius of $(2\id + \alpha B)^{-1}(2\id -\alpha B
 This inequality is quite trivially seen to be satisfied since $\lambda_i > 0$. It is even more clearly seen by considering the two cases $\alpha\lambda_i < 2$ and $\alpha\lambda_i > 2$ separately. In total, we arrive at the same condition as for the Backward Euler scheme: all combinations of $\Delta t$ and $\Delta x$ results in a stable solution.
 
 \subsection{Monte Carlo methods and random walks}
+\label{sec:MC_method}
+The basic background of the Monte Carlo approach to simulating diffusion is already outlined in section \ref{sec:RW}. In the approach of implementing this as a numerical simulation, we follow Farnell and Gibson to some extent \cite{Farnell}. \\
+
+Looking back at equation (\ref{eq:RW_symmetric_largeN}) and keeping in mind that we have put $D = 1$, we imagine that we simulate $N$ symmetric random walks with a step length $\ell_0$. This $\ell_0$ is now fixed by the choice of diffusion constant and time step $\Delta t$ since $D = \ell_0^2/(2\Delta t) \Rightarrow \ell_0 = \sqrt{2D\Delta t} = \sqrt{2\Delta t}$. Another possibility that in the large $N$ limit should result in the same simulation, is to use a varying step length, $\ell_0 = \sqrt{2\Delta t}\xi$, with $\xi$ is a random number drawn from a normal distribution with mean 0 and standard deviation 1. This time, the direction of the step is encoded in the sign of $\xi$ and the walk is still statistically symmetric. These are the two approaches we have implemented.\\
+
+We chose to do the simulation with respect to $v(x,t)$ (adding $u_s(x)$ in the end) due to the Dirichlet boundary conditions (in context of simulation called \emph{absorbing} boundaries) that $v(x,t)$ satisfies: $v(0,t) = v(1,t) = 0$. In terms of the simulation, this means that we simply check whether a particle hit the left or right boundary for each step, and if it does, it is removed from the simulation still contributing to the number of cycles. Each walker must make $N_t$ steps where $N_t = t/\Delta t$ and $t$ is the final time. \\
+
+In addition, since the simulation is done for $v(x,t)$ (recall that the initial condition is $v(x,0) = x-1$ for $x\in (0,1)$), we draw the starting position of each walker according to its initial distribution:
+
+\begin{equation}
+p(x) = 2(1-x)
+\label{eq:MC_initial_dist}
+\end{equation}
+
+with the factor of 2 ensuring normalization $\int_0^1 dx \hspace{1mm} p(x) = 1$. Since we in practice draw numbers $r$ from a uniform distribution on the unit interval $r \in [0,1]$ (using \texttt{ran0()} from \cite{Komp3150}), we must perform a mapping that satisfies the differential equation $p(x)dx = dr$, yielding the solution:
+
+\begin{equation}
+r(x) = 2x-x^2 \hspace{10pt} \mathrm{and} \hspace{10pt} x(r) = 1 - \sqrt{1-r}
+\label{eq:MC_prob_mapping}
+\end{equation}
+
+The final positions of each walker is stored in an array called \texttt{walk\_position[]}. This array is used to produce normalized histograms in python. In the code piece shown in listing \ref{lst:MC_uniform} (relevant for the constant step length simulation) we have added some more features. Firstly, we have restricted the initial position to be an integer multiple of $\ell_0$ (the allowed values are stored in \texttt{possible\_pos[]}) such that the final histogram bins can be deterministically chosen to fit the grid. This is of course altered when the step is drawn from a normal distribution. Secondly, we keep track of the number of the escaped particles (for later normalization) in the variable \texttt{N} and keep iterating until a total of \texttt{number\_walks} walkers have gotten a definite final position. This means that we in practice perform \texttt{number\_walks + N} walks – a number which intuitively will increase with the number of time steps. \\
+
+The variance of each walker, which is stored in \texttt{walk\_variance[]}, is averaged over all walkers and used (the square root of the variance) as a measure of the statistical error $\sigma_t = \tilde{\sigma}/\sqrt{N_t}$ ($\tilde{\sigma}$ is the variance averaged over all walkers) in the end. The histograms are multiplied with at factor \texttt{0.5*number\_walks/(number\_walks + N)} to take into account the fact that \texttt{N} walkers escaped and the initial distribution had area of $1/2$. The histograms and the plots are all produced in the python scripts \texttt{Project5\_f.py}, \texttt{Project5\_g.py}, \texttt{Project5\_MCplotting1.py} and \texttt{Project5\_MCplotting2.py}. We finally note that the function which produces normally distributed step lengths was taken from the project description \cite{Komp3150} and is called \texttt{gaussian\_deviate()}.  \\
+
+\lstset{language=C++,caption={Code sample: the main content of the Monte Carlo approach with random walks. The full implementations can be found in \texttt{Project5\_f.cpp} (constant step length) and \texttt{Project5\_g.cpp} (normal distributed step length).},label={lst:MC_uniform}}
+\begin{center}
+\begin{lstlisting}
+// outer loop over walkers:
+for (int trial=0; trial < number_walks; trial++){
+    // inner loop over walkers:
+    hit_wall = 1;
+    // Checking whether the walker went outside or not:
+    while (hit_wall == 1) {
+      position = 0.0;
+      dummy = 2.0; // Some random (and large) number to ensure new position is found
+      r2 = ran0(&idum2);
+      // Mapping to initial probability distribution:
+      y = 1.0 - sqrt(1.0-r2);
+      local_av2 = local_average = 0.0;
+      // Finding closest multiple of l0:
+      for (int j=1; j<n; j++) {
+        val = fabs(possible_pos[j] - y);
+        if (val < dummy) { dummy = val; position = possible_pos[j]; }
+      }
+      flag = 0;
+      for (int tstep = 1; tstep <= tsteps; tstep++) {
+        r = ran0(&idum);
+        // Move right:
+        if (r <= move_probability){
+          if (1.0 - l0 - position <= eps){flag = 1; N += 1; break; } // Hit right wall: discard!
+          else{ position += l0; }
+        }
+        // Move left:
+        if (r > move_probability){
+          if (position - l0 <= eps){ flag = 1; N += 1; break; } // Hit left wall: discard!
+          else { position -= l0; }
+        }
+        local_average += position; local_av2 += position*position;
+      }  // end of loop over walks
+      if (flag == 0){ hit_wall = 0; } // Walk ended without hitting a wall!
+    } // end of loop over trials
+
+    local_average /= ((double) tsteps); local_av2 /= ((double) tsteps);
+    walk_position[trial] = position;
+    walk_variance[trial] = local_av2 - local_average*local_average;
+}
+\end{lstlisting}
+\end{center}
 
 \section{Results}
+Below we provide a collection of plots and tables that summarizes and compares the five different methods in terms of computation speed and accuracy. Figure \ref{fig:Three_methods10} and \ref{fig:Three_methods100} shows the solutions found with the three direct solvers for $\Delta x = 1/10$ and $\Delta x = 1/100$ as spatial step length respectively. Figure \ref{fig:MC_uniform} shows the results of a simulation of the process as a random walk with constant step length and equal probability of moving left and right. In figure \ref{fig:MC_gaussian} the results of similar computations are shown, but with a step length drawn from a normal distribution.
+
+\begin{figure}[h!tb]
+ \centering
+ \mbox{\subfigure{\includegraphics[width=0.5\textwidth]{Comparison_n10}}\quad
+ \subfigure{\includegraphics[width=0.5\textwidth]{Comparison_n10_zoom} }}
+ \caption{Solutions found with the three direct solvers (FE – Forward Euler, BE – Backward Euler and CN – Crank-Nicolson) for $\Delta x = 0.1$ and 9 internal integration points at (absolute) times $t_1 = 0.05$ and $t_2 = 0.3$. The time step was chosen in accordance with the stability condition of the FE scheme, $\Delta t = 0.005$. The right figure is a zoom of the marked inset in the left figure. The analytical solution is shown for comparison. These figures were produced with the script \texttt{Project5\_d\_t1\_t2.py}.}
+\label{fig:Three_methods10}
+\end{figure}
+
+\begin{figure}[h!tb]
+ \centering
+ \mbox{\subfigure{\includegraphics[width=0.5\textwidth]{Comparison_n100}}\quad
+ \subfigure{\includegraphics[width=0.5\textwidth]{Comparison_n100_zoom} }}
+ \caption{Solutions found with the three direct solvers for $\Delta x = 0.01$ and 99 internal integration points at (absolute) times $t_1 = 0.05$ and $t_2 = 0.3$. Time step: $\Delta t = 0.00005$. The right figure is a zoom of the marked inset (very small) in the left figure. The analytical solution is shown for comparison. These figures were produced with the script \texttt{Project5\_d\_t1\_t2.py}.}
+\label{fig:Three_methods100}
+\end{figure}
+
+\begin{figure}[h!tb]
+ \centering
+ \mbox{\subfigure{\includegraphics[width=0.5\textwidth]{MC_uniform_twoplot_T1}}\quad
+ \subfigure{\includegraphics[width=0.5\textwidth]{MC_uniform_twoplot_T2} }}
+ \caption{Random walk simulation with constant step length $\ell_0 = \sqrt{2\Delta t}$ and equal probability of moving left and right. $\Delta t = 0.005$ in the left figure and $\Delta t = 0.00005$ in the right figure. For the time $t_1 = 0.05$ we used $10^6$ walkers and $10^5$ for the time $t_2 = 0.3$. The analytical solution is shown for comparison. Histograms are normalized in accordance with the discussion in section \ref{sec:MC_method}. These figures were produced with the script \texttt{Project5\_MCplotting1.py}.}
+\label{fig:MC_uniform}
+\end{figure}
+
+\begin{figure}[h!tb]
+ \centering
+ \mbox{\subfigure{\includegraphics[width=0.5\textwidth]{MC_gaussian_twoplot_T1}}\quad
+ \subfigure{\includegraphics[width=0.5\textwidth]{MC_gaussian_twoplot_T2} }}
+ \caption{Random walk simulation with varying step length $\ell_0 = \sqrt{2\Delta t}\xi$ with $\xi$ drawn from a normal distribution with mean 0 and standard deviation 1. $\Delta t = 0.005$ in the left figure and $\Delta t = 0.00005$ in the right figure. For the time $t_1 = 0.05$ we used $10^6$ walkers and $10^5$ for the time $t_2 = 0.3$. The analytical solution is shown for comparison. Histograms are normalized in accordance with the discussion in section \ref{sec:MC_method}. These figures were produced with the script \texttt{Project5\_MCplotting2.py}.}
+\label{fig:MC_gaussian}
+\end{figure}
+
+In the tables \ref{tab:Benchmark1}, \ref{tab:Benchmark2}, \ref{tab:Benchmark3} and \ref{tab:Benchmark4} we compare the numerical accuracy of all the five methods in terms of an average (over $x$) of the absolute error in the calculation (the tables basically contains the same information as visualized in the plots). The final times in the tables are equal to the times used in all the plots, $t_1 = 0.05$ and $t_2 = 0.3$. These were found to be quite representative as the analytical solution is curved, but non-zero for all $x$ at $t_1$, and at $t_2$ the solution is close to $u_s(x)$. The choice of $t_2$ is a compromise between the solution being close to $u_s(x)$, but time not too large for the computation to be unreasonably slow (for the MC simulations). We thus calculated
+
+\begin{equation}
+\epsilon(N_x,t) = \frac{1}{N_x}\sum_{i=1}^{N_x} \lvert u(x_i,t) - u'(x_i,t) \rvert
+\label{eq:Mean_absolute_error}
+\end{equation}
+
+for all the methods, where $u'(x_i,t)$ refers to the numerical solution at position $x_i$ and time $t$, and $N_x$ the number of grid points (or bins for the MC simulations) in $x$. The number $\epsilon(N_x,t)$ is used to reflect the quality of the numerical result\footnote{We could instead have calculated an average of the relative error, but for small times we risk a division of very small numbers since the analytical solution is close to zero in a large part of the interval. In addition, the absolute error (and not the relative error) should be compared with the standard deviation found in the Monte Carlo simulations.}. We also note here that $\Delta t$ was dictated by the strong stability condition of the Forward Euler scheme, $\Delta t \leq \Delta x^2 /2$. In these simulations we constantly put it equal to the upper limit, $\Delta t = \Delta x^2 /2$. In the appendix we provide an example of what happened to the solution if this condition was even slightly violated. We comment on the benchmark results and the plots in the next section.
+
+\begin{table}[h!tb]
+\begin{center}
+\begin{tabular}{p{2cm} p{2cm} p{4cm} p{2.5cm}}
+\toprule
+Method & Calculation time, $T$ [s] & Average absolute error, $\frac{1}{N_x}\sum_i\lvert u(x_i,t) - u'(x_i,t) \rvert$ & Standard deviation (MC), $\sigma_t$ \\ \midrule
+FE & $9\cdot 10^{-6}$ & $0.117808$ & N/A \\
+BE & $1.0\cdot 10^{-5}$ & $0.143233$ & N/A \\
+CN & $6\cdot 10^{-6}$ & $0.055469$ & N/A \\
+UMC & $0.998$ & $0.020362$ & $0.025872$ \\
+GMC & $2.16$ & $0.010392$ & $0.025454$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of the five different methods for the final time $t_1 = 0.05$ with $\Delta t = 0.005$ and $\Delta x=0.1$ for the three direct solvers. $u'(x,t)$ refer to the numerical solution and the following abbreviations are used: FE – Forward Euler, BE – Backward Euler, CN – Crank-Nicolson, UMC – Uniform step Monte Carlo and GMC – Gaussian step Monte Carlo. The Monte Carlo calculations were done with $10^{6}$ walkers and 9 or 10 bins as in the left of figure \ref{fig:MC_uniform} and \ref{fig:MC_gaussian}. The data in this table can be found in the files \texttt{Results\_n10.txt}, \texttt{Benchmark\_lowT1.txt} and \texttt{Benchmark\_lowT1\_gaussian.txt}. } 
+\label{tab:Benchmark1}
+\end{center}
+\end{table}
+
+\begin{table}[h!tb]
+\begin{center}
+\begin{tabular}{p{2cm} p{2cm} p{4cm} p{2.5cm}}
+\toprule
+Method & Calculation time, $T$ [s] & Average absolute error, $\frac{1}{N_x}\sum_i\lvert u(x_i,t) - u'(x_i,t) \rvert$ & Standard deviation (MC), $\sigma_t$ \\ \midrule
+FE & $0.000265$ & $0.001013$ & N/A \\
+BE & $0.002495$ & $0.001901$ & N/A \\
+CN & $0.003130$ & $0.000661$ & N/A \\
+UMC & $68.4$ & $0.001961$ & $0.002506$ \\
+GMC & $194$ & $0.001875$ & $0.002509$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of the five different methods for the final time $t_1 = 0.05$ with $\Delta t = 0.00005$ and $\Delta x=0.01$ for the three direct solvers. The notation is otherwise the same as in table \ref{tab:Benchmark1}. Monte Carlo calculations were done with $10^{6}$ walkers and 99 or 100 bins as in the right of figure \ref{fig:MC_uniform} and \ref{fig:MC_gaussian}. The data in this table can be found in the files \texttt{Results\_n100.txt}, \texttt{Benchmark\_lowT2.txt} and \texttt{Benchmark\_lowT2\_gaussian.txt}.} 
+\label{tab:Benchmark2}
+\end{center}
+\end{table}
+
+\begin{table}[h!tb]
+\begin{center}
+\begin{tabular}{p{2cm} p{2cm} p{4cm} p{2.5cm}}
+\toprule
+Method & Calculation time, $T$ [s] & Average absolute error, $\frac{1}{N_x}\sum_i\lvert u(x_i,t) - u'(x_i,t) \rvert$ & Standard deviation (MC), $\sigma_t$ \\ \midrule
+FE & $0.000167$ & $0.003645$ & N/A \\
+BE & $0.000120$ & $0.005997$ & N/A \\
+CN & $0.000172$ & $0.001043$ & N/A \\
+UMC & $2.28$ & $0.001614$ & $0.004338$ \\
+GMC & $5.50$ & $0.002722$ & $0.004689$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of the five different methods for the final time $t_2 = 0.3$ with $\Delta t = 0.005$ and $\Delta x=0.1$ for the three direct solvers. The notation is otherwise the same as in table \ref{tab:Benchmark1}. Monte Carlo calculations were done with $10^{5}$ walkers and 9 or 10 bins as in the left of figure \ref{fig:MC_uniform} and \ref{fig:MC_gaussian}. The data in this table can be found in the files \texttt{Results\_n10.txt}, \texttt{Benchmark\_highT1.txt} and \texttt{Benchmark\_highT1\_gaussian.txt}.} 
+\label{tab:Benchmark3}
+\end{center}
+\end{table}
+
+\begin{table}[h!tb]
+\begin{center}
+\begin{tabular}{p{2cm} p{2cm} p{4cm} p{2.5cm}}
+\toprule
+Method & Calculation time, $T$ [s] & Average absolute error, $\frac{1}{N_x}\sum_i\lvert u(x_i,t) - u'(x_i,t) \rvert$ & Standard deviation (MC), $\sigma_t$ \\ \midrule
+FE & $0.001838$ & $0.000038$ & N/A \\
+BE & $0.015674$ & $0.000059$ & N/A \\
+CN & $0.019526$ & $0.000011$ & N/A \\
+UMC & $186.9$ & $0.000493$ & $0.000434$ \\
+GMC & $516.8$ & $0.000588$ & $0.000439$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of the five different methods for the final time $t_2 = 0.3$ with $\Delta t = 0.00005$ and $\Delta x=0.01$ for the three direct solvers. The notation is otherwise the same as in table \ref{tab:Benchmark1}. Monte Carlo calculations were done with $10^{5}$ walkers and 99 or 100 bins as in the right of figure \ref{fig:MC_uniform} and \ref{fig:MC_gaussian}. The data in this table can be found in the files \texttt{Results\_n100.txt}, \texttt{Benchmark\_highT2.txt} and \texttt{Benchmark\_highT2\_gaussian.txt}} 
+\label{tab:Benchmark4}
+\end{center}
+\end{table}
+
 
 \section{Discussion}
-%\label{sec:Discuss}
+\label{sec:Discuss}
+We divide the discussion and evaluation of results into two parts. The first part concerns the three direct solvers, the Forward Euler scheme, the Backward Euler scheme and the Crank-Nicoloson scheme. In the second part we discuss the uniform and the Gaussian Monte Carlo method.
+
+\subsection{Direct solvers}
+The three direct solvers that were discussed in some detail in the earlier sections are seen to give quite satisfactory results in practice when comparing to the analytical solution. In figure \ref{fig:Three_methods10} we get the impression that only $9$ (internal) integration points is enough to make an overall good estimate. The situation in the zoomed inset is seen to be repeating for most times: the Forward Euler scheme is slightly over estimating, the Backward Euler scheme is slightly under estimating, while the Crank-Nicolson scheme lies somewhere in the middle. This last observation is of course quite intuitive as the latter scheme is an equally weighted sum of the two first schemes. \\
+
+The computation times for these schemes can be seen from the tables to be typically of the same order, both for large times and small times and for both choices of $\Delta x$. This can be understood from the algorithms given earlier. The Forward Euler scheme basically consists of one simple \texttt{for} loop over position for each time step; this means a number of FLOPS linear in $n$ ($n$ the number of mesh points). The Backward Euler scheme does, on the other hand, call the \texttt{tridiag()} function for each time step. This function also has a FLOP number linear in $n$ (basically some $8(n-1)$ FLOPS). The same goes for the Crank-Nicolson scheme, although it requires one additional loop for the computation of $\tilde{\boldsymbol{V}}_{j-1}$. In other words: All three methods should have almost constant ratios between the required number of FLOPS and hence almost constant ratios of required computation time. \\
+
+Comparing the three direct solvers internally by judging from the results in table \ref{tab:Benchmark1}, \ref{tab:Benchmark2}, \ref{tab:Benchmark3} and \ref{tab:Benchmark4} we typically see that the Crank-Nicolson scheme gives an average absolute error almost one order of magnitude smaller than the other two. With no particular increase in computation time and no stability restrictions on the combination of $\Delta x$ and $\Delta t$, the Crank-Nicolson scheme should be characterized as the most satisfactory method among the three direct solvers for our one dimensional diffusion equation. After some comments on the strength and weaknesses of the Monte Carlo simulations, we will conclude on the overall most satisfactory method. \\
+
+\subsection{Monte Carlo methods}
+We argued for the elementary link between random walks and diffusion in section \ref{sec:RW}. A random walk offers a simplistic and intuitive implementation. The feature that made our implementation slightly more complex (as seen in listing \ref{lst:MC_uniform}) was how to take properly care of the absorbing boundaries. The \texttt{while} loop we set up was a way of handling a possible problem with to few final walkers and hence bad statistics. Without the loop, one must carefully increase the initial number of walkers with the final time in order to avoid loosing all walkers to the boundaries. To exemplify this, after 1000 time steps and $\Delta t = 0.00005$ with constant step length, we found that $1 015 731$ walkers escaped. Thus when we set \texttt{number\_walks} = $10^6$, the effective simulation is done with $2 015 731$ cycles, but with $10^6$ definite final positions. The practical consequence of this is that our Monte Carlo simulations may take unreasonable long times to finish for large final times. This is just what our tables of results reflect. The computation time for the Monte Carlo simulations are of about 5 orders of magnitude greater than for the direct solvers. \\
+
+Some simple tests were done during the implementation to check that the program was working properly. For instance, we checked that the initially drawn starting positions seemed to have the expected distribution given by $p(x)$ in equation (\ref{eq:MC_initial_dist}). We also saw that after one time step the walkers actually moved a distance $\ell_0$ by printing out walker positions and different messages inside each \texttt{if}-test (listing \ref{lst:MC_uniform}). \\
+
+The program with normally distributed step length differs from the one with constant step lengths in some minor ways. The increase in computation time (typically by some factor between 2 and 3) must be almost solely due to the call on \texttt{gaussian\_deviate()} function. And with no particular gain of accuracy (rather a decrease for large times), this method does not contribute with any particular insights. Our measure of the statistical error $\sigma_t$ is satisfactory seen to be in the same order of magnitude as the absolute error. This can also be thought of as a simple test of our implementation. $\sigma_t$ is of course not expected to be exactly equal to the absolute error. One must keep in mind that it is an averaged quantity that approximates the standard deviation (in our case for $v(x)$). Another observation, which is generally consolidated by the table values, is that $\sigma_t$ should tend to zero for large final times since the number of escaped particles becomes large and the solution $v(x)$ itself also tends to zero. We also see (comparing for instance values in table \ref{tab:Benchmark1} and \ref{tab:Benchmark2}) how decreasing $\Delta x$ with a factor 10 reduces the absolute error and $\sigma_t$ with about one order of magnitude. \\
+
+Although these two methods based on random walks does not function as quick or particularly accurate solvers in (1+1) dimensions, they can be quite easily generalized to simulate a system where the diffusion constant is a function of position $D = D(x)$ \cite{Farnell}. In addition, we recall from project 3 – where we solved a six-dimensional integral with Monte Carlo methods – that Monte Carlo methods typically gives a benefit when the number of spatial dimensions become large and direct solvers work rather poorly in comparison. It should, based on what we have discussed in the previous paragraphs, and by comparing table values, be fair to conclude that the Crank-Nicolson scheme is the fastest and most accurate solver (without a huge penalty in large number of FLOPS) for the (1+1)-dimensional diffusion equation.
 
 \section{Conclusion}
+We started this project with a discussion of the diffusion equation in one spatial dimension. We restricted ourselves to boundary conditions that could corresponded to a release of transmitter molecules from the presynaptic cleft and absorption at the postsynaptic cleft. We derived a closed form analytical solution – it later functioned as our main reference when checking the numerical implementations. After seeing how random walks are intrinsically linked to diffusion, we spent some time on presenting three direct solvers, their stability conditions, truncation errors and implementation. Two intuitive Monte Carlo based methods were also presented and implemented. These methods were seen to result in somewhat slow computations and did not in general introduce any particular gain of accuracy as compared to the direct solvers. With this said, we met several interesting challenges and aspects during the implementation, and they demanded to a greater extent than the direct solvers algorithmic thinking. \\
+
+Based on numerical accuracy and computation time (i.e. basically the number of FLOPS) we conclude that in the case of the (1+1)-dimensional diffusion equation, the Crank-Nicolson scheme offered the overall best results. It is expected that this conclusion would be altered if we were to do the same comparison in higher spatial dimensions where Monte Carlo based methods previously have shown to be superior.
 
 \section{Appendix}
+In figure \ref{fig:Dt_violation} we provide an example of what happens with the solutions found with the three direct solvers when the stability condition for the Forward Euler scheme is slightly violated. The figure was produced with $\Delta t = 0.502 \Delta x^2$ (an even smaller violation gave clearly visible effects, but our choice was found to illustrate the problems with the explicit scheme without total domination over the solutions from the other schemes). In the figure one can see how only the Forward Euler scheme gives oscillating and worthless results after only some few time steps. The implicit scheme and the Crank-Nicolson scheme are still stable and can not be visually separated from the exact solution without zooming. This is in perfect accordance with the stability conditions we derived earlier and can be seen as a simple test of the developed programs.
+
+\begin{figure}[h!tb]
+ \centering
+ \includegraphics[width=0.7\textwidth]{Violate_Dt}
+ \caption{Solutions found with the three direct solvers (FE – Forward Euler, BE – Backward Euler and CN – Crank-Nicolson) for $\Delta x = 0.01$ and 99 internal integration points at (absolute) time $t_1 = 0.05$. We put $\Delta t = 0.502 \Delta x^2$ when producing this figure, i.e. a slight violation of the stability criterion for the Forward Euler scheme. This figure was produced with the script \texttt{Project5\_e.py}. }
+\label{fig:Dt_violation}
+\end{figure}
 
 \bibliography{References_pro5}
 
 \section*{Code listing}
+A list of all the codes files developed during the work with this project is given below. The source files and all the benchmark calculations can be found at the github domain mentioned in the beginning of this document. \\
 
+\begin{itemize}
+\item Codes for part d and e: \{\texttt{Project5\_d.cpp}, \texttt{Project5\_d\_t1\_t2.py}\}
+
+\item Codes for part f: \{\texttt{Project5\_f.cpp}, \texttt{Project5\_f.py}, \texttt{Project5\_MCplotting1.py}\}
+
+\item Codes for part g: \{\texttt{Project5\_g.cpp}, \texttt{Project5\_g.py}, \texttt{Project5\_MCplotting2.py}\}
+
+\item Codes for appendix (violation of the stability condition): \{\texttt{Project5\_e.py}\}
+\end{itemize}
 
  %\begin{equation}
  %\delta a = \delta \gamma\cos{\gamma}

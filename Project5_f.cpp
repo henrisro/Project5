@@ -111,7 +111,7 @@ void mc_sampling(int tsteps, int number_walks,
     // Checking whether the walker went outside or not:
     while (hit_wall == 1) {
       position = 0.0;
-      dummy = 2.0;
+      dummy = 2.0; // Some random (and large) number to ensure new position is found
       r2 = ran0(&idum2);
       // Mapping to initial probability distribution:
       y = 1.0 - sqrt(1.0-r2);

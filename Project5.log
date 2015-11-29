@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.4.17)  19 NOV 2015 16:23
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.4.17)  29 NOV 2015 13:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -917,11 +917,13 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 83.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 86.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 86.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 86.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 86.
 
-(/usr/local/texlive/2011/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
 Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
@@ -935,7 +937,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
  [1
 
 {/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 119--120
+Underfull \hbox (badness 10000) in paragraph at lines 118--119
 
  []
 
@@ -943,111 +945,413 @@ Underfull \hbox (badness 10000) in paragraph at lines 119--120
 File: Synaptic_cleft_project.png Graphic file (type png)
 
 <use Synaptic_cleft_project.png>
-Package pdftex.def Info: Synaptic_cleft_project.png used on input line 123.
+Package pdftex.def Info: Synaptic_cleft_project.png used on input line 122.
 (pdftex.def)             Requested size: 403.26366pt x 125.24496pt.
- [2 <./Synaptic_cleft_project.png>]
+ [2 <./Synaptic_cleft_project.png>] [3]
 Underfull \hbox (badness 10000) in paragraph at lines 200--201
 
  []
 
-[3]
-LaTeX Font Info:    Try loading font information for U+bbm on input line 206.
+[4]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 237.
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--238
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 260--261
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 262--263
+
+ []
+
+[5]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 268.
  (/usr/local/texlive/2011/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 )
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 211.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 211.
- [4]
-<Grid_FE-figure0.pdf, id=40, 202.61497pt x 131.48323pt>
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
+
+ []
+
+[6] <Grid_FE-figure0.pdf, id=50, 202.61497pt x 131.48323pt>
 File: Grid_FE-figure0.pdf Graphic file (type pdf)
 
 <use Grid_FE-figure0.pdf>
-Package pdftex.def Info: Grid_FE-figure0.pdf used on input line 256.
+Package pdftex.def Info: Grid_FE-figure0.pdf used on input line 320.
 (pdftex.def)             Requested size: 179.22676pt x 116.30746pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 288--289
-
- []
-
-[5 <./Grid_FE-figure0.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 300--301
+ [7 <./Grid_FE-figure0.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 356--357
 
  []
 
-[6] <Grid_BE-figure0.pdf, id=68, 220.59816pt x 134.32785pt>
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 359.
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+Underfull \hbox (badness 10000) in paragraph at lines 397--398
+
+ []
+
+[8] <Grid_BE-figure0.pdf, id=84, 220.59816pt x 134.32785pt>
 File: Grid_BE-figure0.pdf Graphic file (type pdf)
 
 <use Grid_BE-figure0.pdf>
-Package pdftex.def Info: Grid_BE-figure0.pdf used on input line 355.
+Package pdftex.def Info: Grid_BE-figure0.pdf used on input line 454.
 (pdftex.def)             Requested size: 179.22676pt x 109.137pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 380--381
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 382--384
+ [9]
+Underfull \hbox (badness 10000) in paragraph at lines 479--480
 
  []
 
-[7 <./Grid_BE-figure0.pdf>]
-<Grid_CN-figure0.pdf, id=86, 220.59816pt x 134.32785pt>
+[10 <./Grid_BE-figure0.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 517--519
+
+ []
+
+[11] <Grid_CN-figure0.pdf, id=107, 220.59816pt x 134.32785pt>
 File: Grid_CN-figure0.pdf Graphic file (type pdf)
 
 <use Grid_CN-figure0.pdf>
-Package pdftex.def Info: Grid_CN-figure0.pdf used on input line 409.
+Package pdftex.def Info: Grid_CN-figure0.pdf used on input line 544.
 (pdftex.def)             Requested size: 179.22676pt x 109.137pt.
- [8 <./Grid_CN-figure0.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 441--442
+
+Underfull \hbox (badness 10000) in paragraph at lines 575--576
+
+ []
+
+[12 <./Grid_CN-figure0.pdf>] [13]
+Underfull \hbox (badness 10000) in paragraph at lines 631--632
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 459--460
+Underfull \hbox (badness 10000) in paragraph at lines 645--646
 
  []
 
-[9] (./Project5.bbl) [10] (./Project5.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 647--648
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 649--650
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 665--666
+
+ []
+
+
+Overfull \hbox (13.529pt too wide) in paragraph at lines 667--668
+\T1/lmr/m/n/10.95 tributed step lengths was taken from the project de-scrip-tio
+n [[]] and is called \T1/lmtt/m/n/10.95 gaussian_deviate()\T1/lmr/m/n/10.95 . 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 667--668
+
+ []
+
+[15]
+Package epstopdf Info: Source file: <Comparison_n10.eps>
+(epstopdf)                    date: 2015-11-23 11:23:52
+(epstopdf)                    size: 67339 bytes
+(epstopdf)             Output file: <Comparison_n10-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-26 12:59:44
+(epstopdf)                    size: 47727 bytes
+(epstopdf)             Command: <epstopdf --outfile=Comparison_n10-eps-converte
+d-to.pdf Comparison_n10.eps>
+(epstopdf)             \includegraphics on input line 720.
+Package epstopdf Info: Output file is already uptodate.
+ <Comparison_n10-eps-converted-to.pdf, id=135, 578.16pt x 433.62pt>
+File: Comparison_n10-eps-converted-to.pdf Graphic file (type pdf)
+
+<use Comparison_n10-eps-converted-to.pdf>
+Package pdftex.def Info: Comparison_n10-eps-converted-to.pdf used on input line
+ 720.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+Package epstopdf Info: Source file: <Comparison_n10_zoom.eps>
+(epstopdf)                    date: 2015-11-23 11:17:48
+(epstopdf)                    size: 62193 bytes
+(epstopdf)             Output file: <Comparison_n10_zoom-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-26 12:59:44
+(epstopdf)                    size: 38713 bytes
+(epstopdf)             Command: <epstopdf --outfile=Comparison_n10_zoom-eps-con
+verted-to.pdf Comparison_n10_zoom.eps>
+(epstopdf)             \includegraphics on input line 720.
+Package epstopdf Info: Output file is already uptodate.
+
+<Comparison_n10_zoom-eps-converted-to.pdf, id=136, 578.16pt x 433.62pt>
+File: Comparison_n10_zoom-eps-converted-to.pdf Graphic file (type pdf)
+
+<use Comparison_n10_zoom-eps-converted-to.pdf>
+Package pdftex.def Info: Comparison_n10_zoom-eps-converted-to.pdf used on input
+ line 720.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+
+Overfull \hbox (14.59998pt too wide) in paragraph at lines 720--721
+ [][] 
+ []
+
+Package epstopdf Info: Source file: <Comparison_n100.eps>
+(epstopdf)                    date: 2015-11-23 11:22:58
+(epstopdf)                    size: 68401 bytes
+(epstopdf)             Output file: <Comparison_n100-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-26 12:59:45
+(epstopdf)                    size: 41852 bytes
+(epstopdf)             Command: <epstopdf --outfile=Comparison_n100-eps-convert
+ed-to.pdf Comparison_n100.eps>
+(epstopdf)             \includegraphics on input line 728.
+Package epstopdf Info: Output file is already uptodate.
+<Comparison_n100-eps-converted-to.pdf, id=137, 578.16pt x 433.62pt>
+File: Comparison_n100-eps-converted-to.pdf Graphic file (type pdf)
+
+<use Comparison_n100-eps-converted-to.pdf>
+Package pdftex.def Info: Comparison_n100-eps-converted-to.pdf used on input lin
+e 728.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+Package epstopdf Info: Source file: <Comparison_n100_zoom.eps>
+(epstopdf)                    date: 2015-11-23 11:14:08
+(epstopdf)                    size: 56742 bytes
+(epstopdf)             Output file: <Comparison_n100_zoom-eps-converted-to.pdf>
+
+(epstopdf)                    date: 2015-11-26 12:59:45
+(epstopdf)                    size: 38042 bytes
+(epstopdf)             Command: <epstopdf --outfile=Comparison_n100_zoom-eps-co
+nverted-to.pdf Comparison_n100_zoom.eps>
+(epstopdf)             \includegraphics on input line 728.
+Package epstopdf Info: Output file is already uptodate.
+
+<Comparison_n100_zoom-eps-converted-to.pdf, id=138, 578.16pt x 433.62pt>
+File: Comparison_n100_zoom-eps-converted-to.pdf Graphic file (type pdf)
+
+<use Comparison_n100_zoom-eps-converted-to.pdf>
+Package pdftex.def Info: Comparison_n100_zoom-eps-converted-to.pdf used on inpu
+t line 728.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+
+Overfull \hbox (14.59998pt too wide) in paragraph at lines 728--729
+ [][] 
+ []
+
+Package epstopdf Info: Source file: <MC_uniform_twoplot_T1.eps>
+(epstopdf)                    date: 2015-11-26 11:23:20
+(epstopdf)                    size: 55577 bytes
+(epstopdf)             Output file: <MC_uniform_twoplot_T1-eps-converted-to.pdf
+>
+(epstopdf)                    date: 2015-11-26 12:59:45
+(epstopdf)                    size: 37214 bytes
+(epstopdf)             Command: <epstopdf --outfile=MC_uniform_twoplot_T1-eps-c
+onverted-to.pdf MC_uniform_twoplot_T1.eps>
+(epstopdf)             \includegraphics on input line 736.
+Package epstopdf Info: Output file is already uptodate.
+<MC_uniform_twoplot_T1-eps-converted-to.pdf, id=139, 578.16pt x 433.62pt>
+File: MC_uniform_twoplot_T1-eps-converted-to.pdf Graphic file (type pdf)
+
+<use MC_uniform_twoplot_T1-eps-converted-to.pdf>
+Package pdftex.def Info: MC_uniform_twoplot_T1-eps-converted-to.pdf used on inp
+ut line 736.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+Package epstopdf Info: Source file: <MC_uniform_twoplot_T2.eps>
+(epstopdf)                    date: 2015-11-26 11:24:05
+(epstopdf)                    size: 61803 bytes
+(epstopdf)             Output file: <MC_uniform_twoplot_T2-eps-converted-to.pdf
+>
+(epstopdf)                    date: 2015-11-26 13:00:09
+(epstopdf)                    size: 38776 bytes
+(epstopdf)             Command: <epstopdf --outfile=MC_uniform_twoplot_T2-eps-c
+onverted-to.pdf MC_uniform_twoplot_T2.eps>
+(epstopdf)             \includegraphics on input line 736.
+Package epstopdf Info: Output file is already uptodate.
+
+<MC_uniform_twoplot_T2-eps-converted-to.pdf, id=140, 578.16pt x 433.62pt>
+File: MC_uniform_twoplot_T2-eps-converted-to.pdf Graphic file (type pdf)
+
+<use MC_uniform_twoplot_T2-eps-converted-to.pdf>
+Package pdftex.def Info: MC_uniform_twoplot_T2-eps-converted-to.pdf used on inp
+ut line 736.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+
+Overfull \hbox (14.59998pt too wide) in paragraph at lines 736--737
+ [][] 
+ []
+
+Package epstopdf Info: Source file: <MC_gaussian_twoplot_T1.eps>
+(epstopdf)                    date: 2015-11-26 11:31:25
+(epstopdf)                    size: 55855 bytes
+(epstopdf)             Output file: <MC_gaussian_twoplot_T1-eps-converted-to.pd
+f>
+(epstopdf)                    date: 2015-11-26 12:59:45
+(epstopdf)                    size: 37126 bytes
+(epstopdf)             Command: <epstopdf --outfile=MC_gaussian_twoplot_T1-eps-
+converted-to.pdf MC_gaussian_twoplot_T1.eps>
+(epstopdf)             \includegraphics on input line 744.
+Package epstopdf Info: Output file is already uptodate.
+<MC_gaussian_twoplot_T1-eps-converted-to.pdf, id=141, 578.16pt x 433.62pt>
+File: MC_gaussian_twoplot_T1-eps-converted-to.pdf Graphic file (type pdf)
+
+<use MC_gaussian_twoplot_T1-eps-converted-to.pdf>
+Package pdftex.def Info: MC_gaussian_twoplot_T1-eps-converted-to.pdf used on in
+put line 744.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+Package epstopdf Info: Source file: <MC_gaussian_twoplot_T2.eps>
+(epstopdf)                    date: 2015-11-26 11:32:30
+(epstopdf)                    size: 62018 bytes
+(epstopdf)             Output file: <MC_gaussian_twoplot_T2-eps-converted-to.pd
+f>
+(epstopdf)                    date: 2015-11-26 13:00:28
+(epstopdf)                    size: 38699 bytes
+(epstopdf)             Command: <epstopdf --outfile=MC_gaussian_twoplot_T2-eps-
+converted-to.pdf MC_gaussian_twoplot_T2.eps>
+(epstopdf)             \includegraphics on input line 744.
+Package epstopdf Info: Output file is already uptodate.
+
+<MC_gaussian_twoplot_T2-eps-converted-to.pdf, id=142, 578.16pt x 433.62pt>
+File: MC_gaussian_twoplot_T2-eps-converted-to.pdf Graphic file (type pdf)
+
+<use MC_gaussian_twoplot_T2-eps-converted-to.pdf>
+Package pdftex.def Info: MC_gaussian_twoplot_T2-eps-converted-to.pdf used on in
+put line 744.
+(pdftex.def)             Requested size: 224.03688pt x 168.02602pt.
+
+Overfull \hbox (14.59998pt too wide) in paragraph at lines 744--745
+ [][] 
+ []
+
+[16] [17 <./Comparison_n10-eps-converted-to.pdf> <./Comparison_n10_zoom-eps-con
+verted-to.pdf> <./Comparison_n100-eps-converted-to.pdf> <./Comparison_n100_zoom
+-eps-converted-to.pdf>] [18 <./MC_uniform_twoplot_T1-eps-converted-to.pdf> <./M
+C_uniform_twoplot_T2-eps-converted-to.pdf> <./MC_gaussian_twoplot_T1-eps-conver
+ted-to.pdf> <./MC_gaussian_twoplot_T2-eps-converted-to.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 762--762
+[]\T1/lmr/m/n/10.95 Calculation
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 779--779
+[]\T1/lmr/m/n/10.95 Calculation
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 796--796
+[]\T1/lmr/m/n/10.95 Calculation
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 813--813
+[]\T1/lmr/m/n/10.95 Calculation
+ []
+
+[19]
+Underfull \hbox (badness 10000) in paragraph at lines 832--833
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 834--835
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 836--837
+
+ []
+
+[20]
+Underfull \hbox (badness 10000) in paragraph at lines 839--840
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 841--842
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 843--844
+
+ []
+
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 848--849
+
+ []
+
+Package epstopdf Info: Source file: <Violate_Dt.eps>
+(epstopdf)                    date: 2015-11-28 15:32:54
+(epstopdf)                    size: 51522 bytes
+(epstopdf)             Output file: <Violate_Dt-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-28 15:52:29
+(epstopdf)                    size: 33458 bytes
+(epstopdf)             Command: <epstopdf --outfile=Violate_Dt-eps-converted-to
+.pdf Violate_Dt.eps>
+(epstopdf)             \includegraphics on input line 857.
+Package epstopdf Info: Output file is already uptodate.
+<Violate_Dt-eps-converted-to.pdf, id=691, 578.16pt x 433.62pt>
+File: Violate_Dt-eps-converted-to.pdf Graphic file (type pdf)
+
+<use Violate_Dt-eps-converted-to.pdf>
+Package pdftex.def Info: Violate_Dt-eps-converted-to.pdf used on input line 857
+.
+(pdftex.def)             Requested size: 313.65027pt x 235.23642pt.
+ (./Project5.bbl [22])
+Underfull \hbox (badness 10000) in paragraph at lines 865--866
+
+ []
+
+[23 <./Violate_Dt-eps-converted-to.pdf>] (./Project5.aux) ) 
 Here is how much of TeX's memory you used:
- 6531 strings out of 493633
- 90295 string characters out of 3143377
- 176230 words of memory out of 3000000
- 9621 multiletter control sequences out of 15000+200000
- 81360 words of font info for 76 fonts, out of 3000000 for 9000
+ 7109 strings out of 493633
+ 96990 string characters out of 3143377
+ 301236 words of memory out of 3000000
+ 10170 multiletter control sequences out of 15000+200000
+ 101665 words of font info for 91 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 38i,16n,58p,813b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist
-/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc
-/dvips/lm/lm-ec.enc} </Users/Henrik/Library/texlive/2011/texmf-var/fonts/pk/ljf
-our/public/bbm/bbm10.657pk>{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/
-lm/lm-mathsy.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-math
-ex.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/l
-ocal/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/
-2011/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2011/texmf
--dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2011/texmf-dist/font
-s/type1/public/lm/lmex10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/pu
-blic/lm/lmmi10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lm
-mi7.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></u
-sr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/te
-xlive/2011/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/201
-1/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2011/texmf-dis
-t/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2011/texmf-dist/fonts/typ
-e1/public/lm/lmr17.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/l
-m/lmr6.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr7.pfb><
-/usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/t
-exlive/2011/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2011/
-texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2011/texmf-dist
-/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2011/texmf-dist/fonts/typ
-e1/public/lm/lmsy7.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/l
-m/lmsy8.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmtt10.pf
-b></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
-0.pfb>
-Output written on Project5.pdf (10 pages, 403044 bytes).
+ 38i,16n,58p,1303b,1679s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/
+2011/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2011/texmf-dis
+t/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2011/texmf-dist/fonts/en
+c/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm
+-ec.enc} </Users/Henrik/Library/texlive/2011/texmf-var/fonts/pk/ljfour/public/b
+bm/bbm10.657pk>{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-mathit
+.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}</usr
+/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/tex
+live/2011/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2011/
+texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2011/texmf-dist/
+fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type
+1/public/lm/lmmi10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/l
+m/lmmi6.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi7.pfb
+></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/loca
+l/texlive/2011/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/2
+011/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2011/texmf
+-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2011/texmf-dist/fonts
+/type1/public/lm/lmr12.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/publ
+ic/lm/lmr17.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr6.
+pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/lo
+cal/texlive/2011/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/
+2011/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2011/texmf-d
+ist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2011/texmf-dist/fonts/
+type1/public/lm/lmro9.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/publi
+c/lm/lmsy10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmsy6
+.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/
+local/texlive/2011/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texli
+ve/2011/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2011/tex
+mf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2011/texmf-dist/fo
+nts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Project5.pdf (23 pages, 864486 bytes).
 PDF statistics:
- 184 PDF objects out of 1000 (max. 8388607)
- 143 compressed objects within 2 object streams
+ 848 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 66 words of extra memory for PDF output out of 10000 (max. 10000000)
 

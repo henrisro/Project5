@@ -24,7 +24,7 @@ void Forward_Euler(vec &, int, int, double, double, double);
 void Backward_Euler(vec &, int, int, double, double&, double&, double&, double, double);
 void Crank_Nicolson(vec &, int, int, double, double&, double&, double&, double, double);
 void tridiag(double*, double*, double*, vec, vec &, int);
-void Output_write(vec &, double, int);
+void Output_write(vec &, double, int, double);
 
 double func(double x) {
 	// Use trivial initial condition on the interior of the interval:
@@ -53,12 +53,13 @@ else{
 }
 
 // Apply the Forward Euler scheme to test:
-int n = 50; // meaning Delta_x = 1/10 and Delta_t <= 0.005 for stability:
-int t_steps = 5000;
+int n = 100; // meaning Delta_x = 1/10 and Delta_t <= 0.005 for stability:
+int t_steps = 4000;
 // delta_t determined by the stability condition for the Forward Euler scheme:
-double delta_t = 0.50 /((double) n*n);
+double delta_t = 0.502 /((double) n*n);
 // use these times for comparison:
-double t1 = 0.05; double t2 = 0.5;
+double t1 = 0.05; double t2 = 0.3;
+double time1, time2;
 
 // We apply the three methods of interest below:
 // Apply Forward Euler method:
@@ -71,8 +72,8 @@ ofile.close();
 // Apply Backward Euler method:
 ofile.open(outfilename2);
 ofile << setiosflags(ios::showpoint | ios::uppercase);
-vec u_solution2(n+1);
 double a, b, c;
+vec u_solution2(n+1);
 Backward_Euler(u_solution2, n, t_steps, delta_t, a, b, c, t1, t2);
 ofile.close();
 
@@ -102,7 +103,6 @@ void tridiag(double a, double b, double c, vec y, vec & u, int N)
       // Updating right hand side of matrix equation:
       u(i) = (y(i) - a*u(i-1)) / b_temp;
   }
-
     // Row reduction; backward substition:
   for (int i=N-1; i >= 1; i--) {
         u(i) -= diag_temp(i+1)*u(i+1);
@@ -110,8 +110,12 @@ void tridiag(double a, double b, double c, vec y, vec & u, int N)
 } // End of function tridiag
 
 
-void Forward_Euler(vec & u, int n, int tsteps, double delta_t, double t1, double t2)
+void Forward_Euler(vec & u, int n, int tsteps, double delta_t,
+                   double t1, double t2)
 {
+  double calculation_time;
+  clock_t start, finish;
+  start = clock();
   // n+1 is the number of mesh points in x direction
   // Armadillo is used to handle the vectors.
   vec unew(n+1);
@@ -140,14 +144,26 @@ void Forward_Euler(vec & u, int n, int tsteps, double delta_t, double t1, double
   	}
   	u = unew;
   	if (j == iter1 or j == iter2) {
-  		// Write current values (all x) to txt file:
-  	  Output_write(unew, t_val, n);
+      if (j == iter1) {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
+      else {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
     }
   }
 } // End of function Forward_Euler function
 
-void Backward_Euler(vec & u, int n, int tsteps, double delta_t, double &a, double &b, double &c, double t1, double t2) 
+void Backward_Euler(vec & u, int n, int tsteps, double delta_t, 
+          double &a, double &b, double &c, double t1, double t2) 
 {
+  double calculation_time;
+  clock_t start, finish;
+  start = clock();
   vec vnew(n+1); vec unew(n+1);
   vec v(n+1);
   double delta_x = 1.0/((double) n);
@@ -164,7 +180,7 @@ void Backward_Euler(vec & u, int n, int tsteps, double delta_t, double &a, doubl
   a = -alpha; 
   b = 1+2*alpha; 
   c = -alpha;
-  // Initialize the vector acording to the initial condition in func(x):
+  // Initialize the vector according to the initial condition in func2(x):
   double x_val;
   for (int i=1; i < n; i++) { // Initialize only interior solution
     x_val = i*delta_x; v(i) = func2(x_val); vnew(i) = 0;
@@ -186,15 +202,27 @@ void Backward_Euler(vec & u, int n, int tsteps, double delta_t, double &a, doubl
         unew(l) = v_val + 1.0 - l*delta_x;
       }
       unew(0) = 1.0; unew(n) = 0.0;
-      // Write current values (all x) to txt file:
-      Output_write(unew, t_val, n);
+      if (j == iter1) {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
+      else {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
     }
   }
 } // end of function Backward_Euler function
 
 
-void Crank_Nicolson(vec & u, int n, int tsteps, double delta_t, double &a, double &b, double &c, double t1, double t2) 
+void Crank_Nicolson(vec & u, int n, int tsteps, double delta_t,
+         double &a, double &b, double &c, double t1, double t2) 
 {
+  double calculation_time;
+  clock_t start, finish;
+  start = clock();
   vec unew(n+1); vec y(n+1);
   vec vnew(n+1); vec v(n+1);
   double delta_x = 1.0/((double) n);
@@ -237,17 +265,26 @@ void Crank_Nicolson(vec & u, int n, int tsteps, double delta_t, double &a, doubl
         unew(l) = v_val + 1.0 - l*delta_x;
       }
       unew(0) = 1.0; unew(n) = 0.0;
-      // Write current values (all x) to txt file:
-      Output_write(unew, t_val, n);
+      if (j == iter1) {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
+      else {
+        finish = clock();
+        calculation_time = (finish - start)/(double)CLOCKS_PER_SEC;
+        Output_write(unew, t_val, n, calculation_time);
+      }
     }
   }
 } // end of function Crank_Nicolson function
 
 
-void Output_write(vec & u, double t, int n) 
+void Output_write(vec & u, double t, int n, double time_calc) 
 {
   ofile << "Solution for time: t = " << t << endl;
   for (int i = 0; i <= n; i++) {
      ofile << setw(15) << setprecision(8) << u(i) << endl;
   }
+  ofile << "Calculation time: " << time_calc << endl;
 } // end output function
