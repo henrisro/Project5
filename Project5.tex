@@ -346,7 +346,7 @@ u_{1,j} \\ u_{2,j} \\ \vdots \\ u_{n-1,j}
 \label{eq:Forward_Euler_matrix}
 \end{align}
 
-where we explicitly took care of the boundary conditions in the constant vector being added (since to $u_{0,j} = 1$ and $u_{n,j} = 0$) and only care about the $n-1$ internal points. It is appropriate, also for later reference, to decompose the matrix as $A = \id - \alpha B$ where the elements of $B$ can be expressed in terms of Kronecker deltas: 
+where we explicitly took care of the boundary conditions in the constant vector being added (since $u_{0,j} = 1$ and $u_{n,j} = 0$) and only care about the $n-1$ internal points. It is appropriate, also for later reference, to decompose the matrix as $A = \id - \alpha B$ where the elements of $B$ can be expressed in terms of Kronecker deltas: 
 
 \begin{equation}
 B_{i,j} = 2\delta_{i,j}-\delta_{i+1,j}-\delta_{i-1,j}
